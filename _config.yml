@@ -19,7 +19,7 @@
 # in the templates via {{ site.myvariable }}.
 
 title: Julian Abbott
-email: your-email@example.com
+email: jln.whitley@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Add site description here...test... You can edit this
   line in _config.yml. It will appear in your document head meta (for
