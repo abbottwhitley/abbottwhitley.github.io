@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Implementing a k-Nearest Neighbor classifier"
-date: 2019-9-19
+date: 9-19-2019
 category: notebook
 comments: true
 math: true
