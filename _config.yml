@@ -20,6 +20,7 @@
 
 title: Julian Abbott
 email: jln.whitley@gmail.com
+# email: julian.abbott-whitley@ucdenver.edu
 description: >- # this means to ignore newlines until "baseurl:"
   Site description here...
 baseurl: "" # the subpath of your site, e.g. /blog
