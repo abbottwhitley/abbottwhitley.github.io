@@ -47,7 +47,7 @@ print('Test labels shape: ', y_test.shape)
 ```
 
 
-## k-Nearest Neighbor Algorithm
+## <a name="k-Nearest-Neighbor-Algorithm"></a> k-Nearest Neighbor Algorithm
 
 # <a name="twoloop"></a> Two-loop Implementation
 
