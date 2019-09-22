@@ -47,12 +47,12 @@ print('Test labels shape: ', y_test.shape)
 ```
 
 
-# k-Nearest Neighbor Algorithm
+## k-Nearest Neighbor Algorithm
 
-## <a name="twoloop"></a> Two-loop Implementation
+# <a name="twoloop"></a> Two-loop Implementation
 
-## <a name="oneloop"></a> One-loop Implementation
+# <a name="oneloop"></a> One-loop Implementation
 
-## <a name="noloop"><a/> No-Loop Implementation
+# <a name="noloop"><a/> No-Loop Implementation
 
 ## <a name="crossval"><a/> Cross Validation to find the best k-value
