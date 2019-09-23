@@ -50,7 +50,15 @@ Training labels shape:  (50000,)
 Test data shape:  (10000, 32, 32, 3)
 Test labels shape:  (10000,)
 ```
-Looking at the above output, we can see that the we've loaded all 50,000 (32x32) training images, the 10,000 (32x32) test images, and the corresponding labels for each set. To aid in data processing, a subsample will be created, (python code not shown) so that the process of implementing the k-NN will be more efficient. 
+Looking at the above output, we can see that we've loaded all 50,000 (32x32) training images, the 10,000 (32x32) test images, and the corresponding labels for each set. To help make the development process more efficient, a subsample of 5,000 training images and 500 test iamges will be created, (python processing code not shown). 
+
+```python
+...
+print(X_train.shape, X_test.shape)
+```
+```python
+(5000, 3072) (500, 3072)
+```
 
 ## <a name="k-Nearest-Neighbor-Algorithm"></a> k-Nearest Neighbor Algorithm
 
@@ -65,11 +73,15 @@ $$
 d_{2}(I_{1}, I_{2}) = \sqrt{\sum_{p}(I_{1}^{p} - I_{2}^{p})^{2}}
 $$
 
-The function above calculates the pixel-wise difference between the two images and then squares the difference. The values of the output matrix is then summed together, from which a final square root is taken. The resulting value provide the L2 distance between image A and image B. Doing this against all images in both the test and training data sets, a final matrix is created which notes the L2 distance between all images. This step for calculating the L2 distance can be thought of as the "training" step for the k-NN.        
+The function above calculates the pixel-wise difference between the two images and then squares the difference. The values of the output matrix is then summed together, from which a final square root is taken. The resulting value provide the L2 distance between image A and image B. Doing this against all images in both the test and training data sets, a final matrix is created which documents the L2 distance between all images. This step for calculating the L2 distance can be thought of as the "training" step for the k-NN. Figure 2 contains a plot of the L2 distance matrix for all test and training images within the subsampled data set. Note that in a previous step, a subample of the complete data set was obtained. This included 5000 training images and 500 test iamges. The axis values identifies the index location of each image within its respective data set where as the L2 distance is defined by the intensity value displayed in the graph. 
+
+![CIFAR Sample](/assets/png/knn_abbott_5_0.png){:width="560px"}  
+__Figure 2:__ _L2 (Euclidean) Distance Matrix_
+{: style="text-align: center;"}      
 
 # <a name="twoloop"></a> Two-loop Implementation
 
-
+As the above section suggests, the L2 Distance for all images is calculated by iterating through all images within both data sets. The python implementation of this step takes the form of a ```for loop``` with a nested ```for loop```.   
 ```python
         num_test = X.shape[0]
         num_train = self.X_train.shape[0]

@@ -14,9 +14,9 @@ Course study will cover data driven approaches to discuss deep learning architec
 
 # Module 1:
 - Image Classification: Data-driven Approach, k-Nearest Neighbor, train/val/test splits
-    - L1/L2 Distances
-    - Hyperparameter Search
-    - Cross Validation
+ 	- L1/L2 Distances
+ 	- Hyperparameter Search
+ 	- Cross Validation
 - Linear Classification: Support Vector Machine & Softmax
 	- Parametric Approach
 	- Bias Trick
