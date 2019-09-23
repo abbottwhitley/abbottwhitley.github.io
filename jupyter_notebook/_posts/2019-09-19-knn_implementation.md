@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "knn_abbott"
+title: "kNN Implementation"
 date: 2019-09-19
-category: notebook
+category: Jupyter Notebooks
 comments: true
 math: true
 author: "J. Abbott"

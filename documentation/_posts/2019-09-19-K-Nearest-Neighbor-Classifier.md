@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Implementing a k-Nearest Neighbor classifier"
+title: "Implemention of a k-Nearest Neighbor classifier"
 date: 2019-09-19
 category: documentation
 comments: true
@@ -48,6 +48,12 @@ print('Test labels shape: ', y_test.shape)
 
 
 ## <a name="k-Nearest-Neighbor-Algorithm"></a> k-Nearest Neighbor Algorithm
+
+# <a name="L2-Distance"></a> L2 (Euclidean) Distance
+test
+$$
+d_{2}(I_{1}, I_{2}) = \sqrt{\sum_{p}(I_{1}^{p} - I_{2}^{p})^{2}}
+$$
 
 # <a name="twoloop"></a> Two-loop Implementation
 
