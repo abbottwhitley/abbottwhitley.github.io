@@ -2,7 +2,7 @@
 layout: page
 title: Jupyter Notebooks
 description: Jupyter Notebooks of Julian Abbott
-permalink: /jupyter_notebook/
+permalink: /jupyter_notebooks/
 ---
 
 Jupyter Notebook documentation  
