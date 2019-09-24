@@ -83,7 +83,7 @@ plt.show()
 ```
 
 
-![png](knn_implementation_files/knn_implementation_2_0.png)
+![png](/assets/png/knn_implementation_2_0.png)
 
 
 
@@ -141,7 +141,7 @@ plt.show()
 ```
 
 
-![png](knn_implementation_files/knn_implementation_5_0.png)
+![png](/assets/png/knn_implementation_5_0.png)
 
 
 
@@ -376,7 +376,7 @@ plt.show()
 ```
 
 
-![png](knn_implementation_files/knn_implementation_12_0.png)
+![png](/assets/png/knn_implementation_12_0.png)
 
 
 

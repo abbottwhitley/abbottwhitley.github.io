@@ -93,7 +93,7 @@ Converting the algorithm into a python function, the natural assumption is to th
 
 The output of this process, (Figure 2) contains a plot of the L2 distance matrix for all test and training images within the subsample data set. Note that in a previous step, a subsample of the complete data set was obtained. This included 5000 training images, (expressed below along the X-axis) and 500 test images, (expressed on the Y-axis). The axis values capture the index location of each image within its respective data set while the L2 distance is defined by the intensity value displayed in the graph. Dark points represent a lower L2 distance value while lighter points represent a higher L2 distance. 
 
-![CIFAR Sample](/assets/png/knn_abbott_5_0.png){:width="560px"}  
+![CIFAR Sample](/assets/png/knn_implementation_5_0.png){:width="560px"}  
 __Figure 2:__ _L2 (Euclidean) Distance Matrix_
 {: style="text-align: center;"}      
 
