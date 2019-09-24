@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "CIFAR-10 k-Nearest Neighbor classifier"
+title: "CIFAR-10 k-Nearest Neighbor Classifier"
 date: 2019-09-19
 category: documentation
 comments: true
