@@ -10,7 +10,7 @@ author: "J. Abbott"
 
 > Self Guided study of the [course notes](http://cs231n.github.io/) for cs231n: Convolutional Neural Networks for Visual Recognition, provided as a public resource through Stanford University. Included in this page are references to many of the classes and function calls developed by Stanford university as part of the cs231 curriculum. The complete implementation of the [k-NN classifier](/jupyter_notebook/jupyter%20notebooks/2019/09/19/knn_implementation) has been exported as a final Markdown file and can be found in the [Jupyter Notebooks](/jupyter_notebooks/) section of this site.
 
-In this section, we will implement the k-Nearest Neighbor algorithm, (k-NN), for use in a simple image classification system which will then be implemented and tested against the CIFAR-10 dataset. In addition to this write up, a Jupyter Notebook of the 
+In this section, we will implement the k-Nearest Neighbor algorithm, (k-NN), for use in a an image classification system. The system will then be implemented and tested against the CIFAR-10 dataset. The objective of this implementation is to accurately assign a single label to each of the images within the test set based on a set of predetermined categories. 
 
 - [Loading the CIFAR-10 dataset](#loading-the-cifar-10-dataset)
 - [k-Nearest Neighbor Algorithm](#k-Nearest-Neighbor-Algorithm)
@@ -24,7 +24,7 @@ In this section, we will implement the k-Nearest Neighbor algorithm, (k-NN), for
 
 The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) is a labeled subset of 60,000 (32x32) color images which were collected by Alex Krizhevsky, Vinod Nair, and Geoffrey Hinto. The images are categorized within 1 of 10 separate classifications, with 6,000 images per class. The complete dataset contains 50,000 training images along with 10,000 test images. The test images was created using "exactly 1,000 randomly-selected images from each class". Figure 1 below shows a subsample of 7 images from each class along with the corresponding labels for each class.
 
-![CIFAR Sample](/assets/png/cifar_10_sample.png){:width="560px"}  
+![CIFAR Sample](/assets/png/knn/cifar_10_sample.png){:width="560px"}  
 __Figure 1:__ _Samples from the CIFAR-10 Dataset_
 {: style="text-align: center;"} 
 
@@ -93,7 +93,7 @@ Converting the algorithm into a python function, the natural assumption is to th
 
 The output of this process, (Figure 2) contains a plot of the L2 distance matrix for all test and training images within the subsample data set. Note that in a previous step, a subsample of the complete data set was obtained. This included 5000 training images, (expressed below along the X-axis) and 500 test images, (expressed on the Y-axis). The axis values capture the index location of each image within its respective data set while the L2 distance is defined by the intensity value displayed in the graph. Dark points represent a lower L2 distance value while lighter points represent a higher L2 distance. 
 
-![CIFAR Sample](/assets/png/knn_implementation_5_0.png){:width="560px"}  
+![CIFAR Sample](/assets/png/knn/knn_implementation_5_0.png){:width="560px"}  
 __Figure 2:__ _L2 (Euclidean) Distance Matrix_
 {: style="text-align: center;"}      
 
@@ -205,11 +205,15 @@ for k in k_choices:
         k_to_accuracies[k].append(accuracy)
 ```
 
-![CIFAR Sample](/assets/png/knn_implementation_12_0.png){:width="560px"}  
+![CIFAR Sample](/assets/png/knn/knn_implementation_12_0.png){:width="560px"}  
 __Figure 3:__ _Cross-Validation Results_
 {: style="text-align: center;"} 
 
-Using the Cross-Validation results above, it's clear that the optimum value of k is 10. Running the k-NN one last time using k=10, we obtain the following results. 
+Using the Cross-Validation results above, it's clear that the optimum value of k is 10. Running the k-NN one last time with k=10, we obtain the following results.  
 ```python
 Got 141 / 500 correct => accuracy: 0.282000
 ```
+Although the k-NN was useful for introducing some key concepts in image classification, it came with the following disadvantages:
+
+- The classifier must store all of the training data for later use when trying to make predictions. Considering the size of both the training and test sets, this approach requires large amount of data and leads to issues with data storage. In terms of scalability, the data storage issue is amplified, becoming more problematic, as the data set grows. 
+- Ideally, the training portion of the classification system would be the most data intensive. This then implies that the prediction phase would be relatively quick. Conversely, with the k-NN, the training portion is relatively quick, while the prediction phase is the most data intensive.  
