@@ -10,9 +10,9 @@ author: "J. Abbott"
 
 > Self Guided study of the [course notes](http://cs231n.github.io/) for cs231n: Convolutional Neural Networks for Visual Recognition, provided as a public resource through Stanford University. Included in this page are references to many of the classes and function calls developed by Stanford university as part of the cs231 curriculum. The complete implementation of the [SVM classifier](/jupyter_notebook/jupyter%20notebooks/2019/09/19/knn_implementation) has been exported as a final Markdown file and can be found in the [Jupyter Notebooks](/jupyter_notebooks/) section of this site.
 
-In this section, we continue the task of image classification on the CIFAR-10 labeled dataset. In this approach we'll implement the Support Vector Machine, (SVM), a linear classification, supervised learning algorithm. The model outputs a class identity by use of a linear function which assumes a boundary exists that separates one class boundary from another. The primary goal of the SVM is to efficiently find the boundary which separates one class from another. In this implementation, we will utilize a linear score function to compute a class score for the input data set. The output score can then be used within a loss function to better determine the success of the linear score function. Stochastic Gradient Descent will then be utilized as the optimization algorithm to minimize the loss determined by the loss function. 
+In this section, we continue the task of image classification on the CIFAR-10 labeled dataset. In this approach we'll implement the Support Vector Machine, (SVM), a linear classification, supervised learning algorithm. The model outputs a class identity by use of a linear function which assumes a boundary exists that separates one class boundary from another. The primary goal of the SVM is to efficiently find the boundary which separates one class from another. In this implementation, we will utilize a linear score function to compute a class score for the input data set. The output score can then be used within a loss function to better determine the success of the linear score function. Stochastic Gradient Descent will then be utilized as the optimization algorithm to minimize the loss obtained by the loss function. 
 
-- [Loading the CIFAR-10 dataset and Pre-Processing](#loading-the-cifar-10-dataset)
+- [Loading the CIFAR-10 dataset](#loading-the-cifar-10-dataset)
 - [Data Pre-Processing](#pre-processing)
 - [Linear Classification](#Linear-Classification)
 	- [Linear Score Function](#Linear-Score-Function)
@@ -51,6 +51,7 @@ Test labels shape:  (10000,)
 ```
 
 ## <a name="pre-processing"></a> Data Pre-Processing
+Prior to training the model, the data must be partitioning accordingly. From the 50,000 images within the training data, 49,000 images will be grouped as the official training set while the remaining 1,000 images will be designated as a validation set. The validation set will be used to tune the learning rate and regularization strength. From the 10,000 images within the test data set, a subsample of 1,000 images will be used to evaluate the accuracy of the SVM. A separate development data set of 500 randomly selected images will be created for use during development. Also note that the pixels for each image have been reshaped from a 3-dimensional, (32 x 32) matrix into a 3072 element array.  
 
 ```python
 Training data shape:  (49000, 3072)
@@ -59,7 +60,11 @@ Test data shape:  (1000, 3072)
 dev data shape:  (500, 3072)
 ```
 
-![png](/assets/png/svm_files/svm_7_1.png)
+Finally, we'll normalize the dataset by subtracting the mean of the training data from each of the datasets outlined above. Subtracting the dataset mean centers the data and helps to keep the feature dataset within a similar range of each other which is beneficial when processing the gradient.  
+
+![CIFAR Sample](/assets/png/svm_files/svm_7_1.png){:width="300px"}  
+__Figure 2:__ _Mean of the Training Data Set_
+{: style="text-align: center;"} 
 
 
 ## <a name="Linear-Classification"></a> Linear Classification
