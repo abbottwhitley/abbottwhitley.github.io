@@ -10,7 +10,7 @@ author: "J. Abbott"
 
 > Self Guided study of the [course notes](http://cs231n.github.io/) for cs231n: Convolutional Neural Networks for Visual Recognition, provided as a public resource through Stanford University. Included in this page are references to many of the classes and function calls developed by Stanford university as part of the cs231 curriculum. The complete implementation of the [SVM classifier](/jupyter_notebook/jupyter%20notebooks/2019/09/19/knn_implementation) has been exported as a final Markdown file and can be found in the [Jupyter Notebooks](/jupyter_notebooks/) section of this site.
 
-In this section, we continue the task of image classification on the CIFAR-10 labeled dataset. In this approach we'll implement the Support Vector Machine, (SVM), a linear classification, supervised learning algorithm. The model outputs a class identity by use of a linear function which assumes a boundary exists that separates one class boundary from another. The primary goal of the SVM is to efficiently find the boundary which separates one class from another. In this implementation, we will utilize a linear score function to compute a class score for the input data set. The output score can then be used within a loss function to better determine the success of the linear score function. Stochastic Gradient Descent will then be utilized as the optimization algorithm to minimize the loss obtained by the loss function. 
+In this section, we continue the task of image classification on the CIFAR-10 labeled dataset. In this approach we'll implement the Support Vector Machine, (SVM), a linear classification, supervised learning algorithm that works to identify the optimal hyperplane for linearly separable patterns.The final output of the model is a class identity. The SVM uses a linear function which assumes a boundary exists that separates one class boundary from another. The primary goal of the SVM is to efficiently find the boundary which separates one class from another. In this implementation, we will utilize a linear score function to compute a class score for the input data set. The output score can then be used within a loss function to better determine the success of the linear score function. Stochastic Gradient Descent will then be utilized as the optimization algorithm to minimize the loss obtained by the loss function. 
 
 - [Loading the CIFAR-10 dataset](#loading-the-cifar-10-dataset)
 - [Data Pre-Processing](#pre-processing)
@@ -69,14 +69,23 @@ __Figure 2:__ _Mean of the Training Data Set_
 
 ## <a name="Linear-Classification"></a> Linear Classification
 
-
-
-
 # <a name="Linear-Score-Function"></a> Linear Score Function
+
+The SVM is initiated by first computing the linear score function of the data set. The linear score function is a product of the input training data, $$x_{i}$$, the randomly generated weight matrix $$ W $$, and a bias vector $$ B $$ which influences the output score without directly interacting with the input training data. 
+ 
+
+```python
+# generate a random SVM weight matrix of small numbers
+W = np.random.randn(3073, 10) * 0.0001 
+``` 
+
+From the parameters noted above, we arrive at the following function. 
 
 $$
 f(x_{i}, W, b) = Wx_{i}+b
 $$
+
+A few ideas can be inferred from the linear score function above. The dot product of the two matrices $$Wx_{i}$$ result in an array of 10 separate scores for each image. Noting here that the weights $$W$$ were randomly generated indicates that we have the ability to adjust these input values. As we train the model, the goal is to adjust the output a significantly higher score for the correct class, with respect to the output scores for the incorrect classes. This step of fine-tunning the model will be accomplished with stochastic gradient descent. 
 
 # <a name="Loss-Function"></a> Loss Function
 
@@ -91,6 +100,8 @@ $$
 ![png](/assets/png/svm_files/svm_17_0.png)
 
 # <a name="SGD"></a> Stochastic Gradient Descent
+
+...SVM works to increase the margin between the identified patterns. 
 
 ![png](/assets/png/svm_files/svm_20_0.png)
 
