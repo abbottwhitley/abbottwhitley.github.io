@@ -69,23 +69,25 @@ __Figure 2:__ _Mean of the Training Data Set_
 
 ## <a name="Linear-Classification"></a> Linear Classification
 
+This method of linear classification is in effect a template matching algorithm where each class within an input weight matrix $$W$$ is iteratively adjusted to create a best fit template for the class it represents. The adjusted weights can then be used to make a prediction on an input test image. This is accomplished through a single dot product of the two matrices, (the test image $$x_{i}$$ and the adjusted weight matrix $$W$$). The output of this process will then be a final score for each class which specifies how closely the input image maps to the corresponding class.   
+
 # <a name="Linear-Score-Function"></a> Linear Score Function
 
 The SVM is initiated by first computing the linear score function of the data set. The linear score function is a product of the input training data, $$x_{i}$$, the randomly generated weight matrix $$ W $$, and a bias vector $$ B $$ which influences the output score without directly interacting with the input training data. 
  
-
 ```python
 # generate a random SVM weight matrix of small numbers
 W = np.random.randn(3073, 10) * 0.0001 
 ``` 
 
-From the parameters noted above, we arrive at the following function. 
+From these parameters, we arrive at the following function. 
 
 $$
 f(x_{i}, W, b) = Wx_{i}+b
 $$
 
-A few ideas can be inferred from the linear score function above. The dot product of the two matrices $$Wx_{i}$$ result in an array of 10 separate scores for each image. Noting here that the weights $$W$$ were randomly generated indicates that we have the ability to adjust these input values. As we train the model, the goal is to adjust the output a significantly higher score for the correct class, with respect to the output scores for the incorrect classes. This step of fine-tunning the model will be accomplished with stochastic gradient descent. 
+
+A few observations can be made about the linear score function noted above. The dot product of the two matrices $$Wx_{i}$$ result in an array of 10 separate scores for each image. Noting here that the weights $$W$$ were randomly generated indicates that we have the ability to adjust these input values. As we train the model, the goal is to adjust the output to a significantly higher score for the correct class, with respect to the output scores for the incorrect classes. This step of fine-tunning the model will be accomplished with stochastic gradient descent. 
 
 # <a name="Loss-Function"></a> Loss Function
 
@@ -108,3 +110,10 @@ $$
 # <a name="Hyperparameter-tuning"></a> Hyperparameter Tuning and Cross Validation
 
 ![png](/assets/png/svm_files/svm_22_0.png)
+
+
+Conclusion (Benifits)
+	- SVM uses training data to learn the parameters of W, and B. Training data is then discarded and the parameters are used to make predictions
+	- Clasifying a test image involves a single matrix multiplication and addition, less expensive from a computation perspective
+	- Discussion around how different color channels for specific objects might result in specific weights for those channels
+	- Template matching
