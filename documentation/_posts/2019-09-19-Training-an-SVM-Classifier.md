@@ -1,34 +1,34 @@
 ---
 layout: post
-title: "Training a Support Vector Machine (SVM)"
-date: 2019-09-19
+title: "Multiclass Support Vector Machine (SVM)"
+date: 2019-09-26
 category: documentation
 comments: true
 math: true
 author: "J. Abbott"
 ---
 
-> Self Guided study of the [course notes](http://cs231n.github.io/) for cs231n: Convolutional Neural Networks for Visual Recognition, provided as a public resource through Stanford University. Included in this page are references to many of the classes and function calls developed by Stanford university as part of the cs231 curriculum. The complete implementation of the [k-NN classifier](/jupyter_notebook/jupyter%20notebooks/2019/09/19/knn_implementation) has been exported as a final Markdown file and can be found in the [Jupyter Notebooks](/jupyter_notebooks/) section of this site.
+> Self Guided study of the [course notes](http://cs231n.github.io/) for cs231n: Convolutional Neural Networks for Visual Recognition, provided as a public resource through Stanford University. Included in this page are references to many of the classes and function calls developed by Stanford university as part of the cs231 curriculum. The complete implementation of the [SVM classifier](/jupyter_notebook/jupyter%20notebooks/2019/09/19/knn_implementation) has been exported as a final Markdown file and can be found in the [Jupyter Notebooks](/jupyter_notebooks/) section of this site.
 
-In this section, we will implement the k-Nearest Neighbor algorithm, (k-NN), for use in a simple image classification system which will then be implemented and tested against the CIFAR-10 dataset. In addition to this write up, a Jupyter Notebook of the 
+In this section, we continue the task of image classification against the CIFAR-10 labeled dataset using the Support Vector Machine, (SVM), a supervised learning algorithm. The model outputs a class identity by use of a linear function which assumes a boundary exists that separates one class boundary from another. The primary goal of the SVM is to efficiently find the boundary which separates one class from another. In this implementation, we will utilize a linear score function to compute a class score for the input data set. The output score can then be used within a loss function to better determine the success of the linear score function. Stochastic Gradient Descent will then be utilized as the optimization algorithm to minimize the loss determined by the loss function. 
 
-- [Loading the CIFAR-10 dataset](#loading-the-cifar-10-dataset)
-- [k-Nearest Neighbor Algorithm](#k-Nearest-Neighbor-Algorithm)
-	- [L2 (Euclidean) Distance](#L2-Distance)
-    - [Two-Loop Implementation](#twoloop)
-    - [No-Loop Implementation](#noloop)
-- [Cross-validation to find the best _k_](#crossval)
-
+- [Loading the CIFAR-10 dataset and Pre-Processing](#loading-the-cifar-10-dataset)
+- [Data Pre-Processing](#pre-processing)
+- [Linear Classification](#Linear-Classification)
+	- [Linear Score Function](#Linear-Score-Function)
+	- [Loss Function](#Loss-Function)
+    - [Multiclass Support Vector Machine (SVM)](#SVM)
+    - [Stochastic Gradient Descent](#SGD)
+- [Hyperparameter Tuning and Cross Validation](Hyperparameter-tuning)
 
 ## Loading the CIFAR-10 Dataset
 
-The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) is a labeled subset of 60,000 (32x32) color images which were collected by Alex Krizhevsky, Vinod Nair, and Geoffrey Hinto. The images are categorized within 1 of 10 separate classifications, with 6,000 images per class. The complete dataset contains 50,000 training images along with 10,000 test images. The test images was created using "exactly 1,000 randomly-selected images from each class". Figure 1 below shows a subsample of 7 images from each class along with the corresponding labels for each class.
+Similar to the [knn-implementation](/documentation/2019/09/19/K-Nearest-Neighbor-Classifier/), the first step in this process is to load the raw CIFAR-10 data into python. A quick preview of the loaded data is shown in Figure 1 below.   
 
 ![CIFAR Sample](/assets/png/knn/cifar_10_sample.png){:width="560px"}  
 __Figure 1:__ _Samples from the CIFAR-10 Dataset_
 {: style="text-align: center;"} 
 
-The first step in this process was to simply load the raw CIFAR-10 data into python. A quick preview of the loaded data is shown in Figure 1 above.   
 
 ```python
 # Load the raw CIFAR-10 data.
@@ -49,12 +49,46 @@ Training labels shape:  (50000,)
 Test data shape:  (10000, 32, 32, 3)
 Test labels shape:  (10000,)
 ```
-Looking at the above output, we can see that we've loaded all 50,000 (32x32) training images, the 10,000 (32x32) test images, and the corresponding labels for each set. To help make the development process more efficient, a subsample of 5,000 training images and 500 test images will be created, (python processing code not shown). 
+
+## <a name="pre-processing"></a> Data Pre-Processing
 
 ```python
-...
-print(X_train.shape, X_test.shape)
+Training data shape:  (49000, 3072)
+Validation data shape:  (1000, 3072)
+Test data shape:  (1000, 3072)
+dev data shape:  (500, 3072)
 ```
-```python
-(5000, 3072) (500, 3072)
-```
+
+![png](/assets/png/svm_files/svm_7_1.png)
+
+
+## <a name="Linear-Classification"></a> Linear Classification
+
+
+
+
+# <a name="Linear-Score-Function"></a> Linear Score Function
+
+$$
+f(x_{i}, W, b) = Wx_{i}+b
+$$
+
+# <a name="Loss-Function"></a> Loss Function
+
+
+$$
+L_{i} = \sum_{j \neq y_{i}} max(0,s_{j} - s_{y_{i}} + \Delta)
+$$
+
+
+# <a name="SVM"></a> Multiclass Support Vector Machine (SVM)
+
+![png](/assets/png/svm_files/svm_17_0.png)
+
+# <a name="SGD"></a> Stochastic Gradient Descent
+
+![png](/assets/png/svm_files/svm_20_0.png)
+
+# <a name="Hyperparameter-tuning"></a> Hyperparameter Tuning and Cross Validation
+
+![png](/assets/png/svm_files/svm_22_0.png)

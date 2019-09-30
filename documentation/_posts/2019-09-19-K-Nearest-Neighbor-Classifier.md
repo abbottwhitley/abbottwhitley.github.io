@@ -22,7 +22,7 @@ In this section, we will implement the k-Nearest Neighbor algorithm, (k-NN), for
 
 ## Loading the CIFAR-10 Dataset
 
-The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) is a labeled subset of 60,000 (32x32) color images which were collected by Alex Krizhevsky, Vinod Nair, and Geoffrey Hinto. The images are categorized within 1 of 10 separate classifications, with 6,000 images per class. The complete dataset contains 50,000 training images along with 10,000 test images. The test images was created using "exactly 1,000 randomly-selected images from each class". Figure 1 below shows a subsample of 7 images from each class along with the corresponding labels for each class.
+The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) is a labeled subset of 60,000 (32x32) color images which were collected by Alex Krizhevsky, Vinod Nair, and Geoffrey Hinto. The images are categorized within 1 of 10 separate classifications, with 6,000 images per class. The complete dataset contains 50,000 training images along with 10,000 test images. The test images were created using "exactly 1,000 randomly-selected images from each class". Figure 1 below shows a subsample of 7 images from each class along with the corresponding labels for each class.
 
 ![CIFAR Sample](/assets/png/knn/cifar_10_sample.png){:width="560px"}  
 __Figure 1:__ _Samples from the CIFAR-10 Dataset_
