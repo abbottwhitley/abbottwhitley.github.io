@@ -8,7 +8,7 @@ math: true
 author: "J. Abbott"
 ---
 
-> Self Guided study of the [course notes](http://cs231n.github.io/) for cs231n: Convolutional Neural Networks for Visual Recognition, provided as a public resource through Stanford University. Included in this page are references to many of the classes and function calls developed by Stanford university as part of the cs231 curriculum. The complete implementation of the [k-NN classifier](/jupyter_notebook/jupyter%20notebooks/2019/09/19/knn_implementation) has been exported as a final Markdown file and can be found in the [Jupyter Notebooks](/jupyter_notebooks/) section of this site.
+> Self Guided study of the [course notes](http://cs231n.github.io/)[^1] for cs231n: Convolutional Neural Networks for Visual Recognition provided Stanford University. Included in this page are references to the classes and function calls developed by Stanford university and others[^2] who have worked through this course material. The complete implementation of the [k-NN classifier](/jupyter_notebook/jupyter%20notebooks/2019/09/19/knn_implementation) has been exported as a final Markdown file and can be found in the [Jupyter Notebooks](/jupyter_notebooks/) section of this site. 
 
 In this section, we will implement the k-Nearest Neighbor algorithm, (k-NN), for use in a an image classification system. The system will then be implemented and tested against the CIFAR-10 dataset. The objective of this implementation is to accurately assign a single label to each of the images within the test set based on a set of predetermined categories. 
 
@@ -222,5 +222,8 @@ Although the k-NN was useful for introducing some key concepts in image classifi
 
 # <a name="Ref"></a> References
 
-1. CS231n Stanford University (2015, Aug).Convolutional Neural Networks for Visual Recognition [Web log post]. Retrieved from http://cs231n.stanford.edu/
-2. Miranda, L. J. (2017, Feb 11).Implementing a multiclass support-vector machine [Web log post]. Retrieved from https://ljvmiranda921.github.io/notebook/2017/02/11/multiclass-svm/
+
+
+
+[^1]: CS231n Stanford University (2015, Aug).Convolutional Neural Networks for Visual Recognition [Web log post]. Retrieved from http://cs231n.stanford.edu/
+[^2]: Miranda, L. J. (2017, Feb 11).Implementing a multiclass support-vector machine [Web log post]. Retrieved from https://ljvmiranda921.github.io/notebook/2017/02/11/multiclass-svm/
