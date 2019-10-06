@@ -18,6 +18,7 @@ In this section, we will implement the k-Nearest Neighbor algorithm, (k-NN), for
     - [Two-Loop Implementation](#twoloop)
     - [No-Loop Implementation](#noloop)
 - [Cross-validation to find the best _k_](#crossval)
+- [Refereneces](#Ref)
 
 
 ## Loading the CIFAR-10 Dataset
@@ -217,3 +218,9 @@ Although the k-NN was useful for introducing some key concepts in image classifi
 
 - The classifier must store all of the training data for later use when trying to make predictions. Considering the size of both the training and test sets, this approach requires large amount of data and leads to issues with data storage. In terms of scalability, the data storage issue is amplified, becoming more problematic, as the data set grows. 
 - Ideally, the training portion of the classification system would be the most data intensive. This then implies that the prediction phase would be relatively quick. Conversely, with the k-NN, the training portion is relatively quick, while the prediction phase is the most data intensive.  
+
+
+# <a name="Ref"></a> References
+
+1. CS231n Stanford University (2015, Aug).Convolutional Neural Networks for Visual Recognition [Web log post]. Retrieved from http://cs231n.stanford.edu/
+2. Miranda, L. J. (2017, Feb 11).Implementing a multiclass support-vector machine [Web log post]. Retrieved from https://ljvmiranda921.github.io/notebook/2017/02/11/multiclass-svm/

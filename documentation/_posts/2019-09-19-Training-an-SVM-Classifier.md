@@ -19,6 +19,8 @@ In this section, we continue the task of image classification on the CIFAR-10 la
 	- [Loss Function](#Loss-Function)
     - [Stochastic Gradient Descent](#SGD)
 - [Hyperparameter Tuning and Cross Validation](#Hyperparameter-tuning)
+- [Refereneces](#Ref)
+
 
 ## Loading the CIFAR-10 Dataset
 
@@ -461,3 +463,12 @@ __Figure 6:__ _Visualization of learned weights_
 
 
 Unlike the [knn-implementation](/documentation/2019/09/19/K-Nearest-Neighbor-Classifier.html) previously discussed, the training data is discarded once the trained parameters $$W$$ are learned. When making a prediction, the paramaters are used in a single dot product operation which is computationally inexpensive. However, this implemenation of the SVM has its limitation when it comes to over generalization. As was shown in figure 6, the templates for various classes have a tendancy to be categorized based on a dominant color within the background, (as opposed to the object itself).    
+
+
+
+
+# <a name="Ref"></a> References
+
+1. CS231n Stanford University (2015, Aug).Convolutional Neural Networks for Visual Recognition [Web log post]. Retrieved from http://cs231n.stanford.edu/
+2. Miranda, L. J. (2017, Feb 11).Implementing a multiclass support-vector machine [Web log post]. Retrieved from https://ljvmiranda921.github.io/notebook/2017/02/11/multiclass-svm/
+
