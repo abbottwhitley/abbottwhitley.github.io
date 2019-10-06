@@ -35,7 +35,7 @@ cifar10_dir = 'cs231n/datasets/cifar-10-batches-py'
 # Training images, training labels, test images, test labels
 X_train, y_train, X_test, y_test = load_CIFAR10(cifar10_dir)
 
-# View some basic details of the CIFAR-10 data
+# View some details of the CIFAR-10 data
 print('Training data shape: ', X_train.shape)
 print('Training labels shape: ', y_train.shape)
 print('Test data shape: ', X_test.shape)
