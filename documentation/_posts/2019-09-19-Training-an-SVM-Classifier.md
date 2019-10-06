@@ -22,7 +22,7 @@ In this section, we continue the task of image classification on the CIFAR-10 la
 
 ## Loading the CIFAR-10 Dataset
 
-Similar to the [knn-implementation](/documentation/2019/09/19/K-Nearest-Neighbor-Classifier/), the first step in this process is to load the raw CIFAR-10 data into python. A quick preview of the loaded data is shown in Figure 1 below.   
+Similar to the [knn-implementation](/documentation/2019/09/19/K-Nearest-Neighbor-Classifier.html/), the first step in this process is to load the raw CIFAR-10 data into python. A quick preview of the loaded data is shown in Figure 1 below.   
 
 ![CIFAR Sample](/assets/png/svm/svm_4_0.png){:width="560px"}  
 __Figure 1:__ _Samples from the CIFAR-10 Dataset_
@@ -460,4 +460,4 @@ __Figure 6:__ _Visualization of learned weights_
 {: style="text-align: center;"} 
 
 
-Unlike the [knn-implementation](/documentation/2019/09/19/K-Nearest-Neighbor-Classifier/) previously discussed, the training data is discarded once the trained parameters $$W$$ are learned. When making a prediction, the paramaters are used in a single dot product operation which is computationally inexpensive. However, this implemenation of the SVM has its limitation when it comes to over generalization. As was shown in figure 6, the templates for various classes have a tendancy to be categorized based on a dominant color within the background, (as opposed to the object itself).    
+Unlike the [knn-implementation](/documentation/2019/09/19/K-Nearest-Neighbor-Classifier.html/) previously discussed, the training data is discarded once the trained parameters $$W$$ are learned. When making a prediction, the paramaters are used in a single dot product operation which is computationally inexpensive. However, this implemenation of the SVM has its limitation when it comes to over generalization. As was shown in figure 6, the templates for various classes have a tendancy to be categorized based on a dominant color within the background, (as opposed to the object itself).    
