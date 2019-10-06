@@ -128,7 +128,7 @@ __Figure 2:__ _Mean of the Training Data Set_
 
 Implementation of a linear classifier can be thought of as a template matching algorithm where each class within an input weight matrix $$W$$ is iteratively adjusted to create a best fit template for the class it represents. The adjusted weights are then used in the score function when trying to make a prediction against an unknown input image. In our case this would be the test image dataset. The output of this process is a final score value for each class which specifies how closely the input image maps to the corresponding class.   
 
-# <a name="Linea-Score-Function"></a> Linear Score Function
+# <a name="Linear-Score-Function"></a> Linear Score Function
 
 The SVM is implemented by first computing the linear score function of the data set. The linear score function uses the dot product of the input training data, $$x_{i}$$, and the randomly generated weight matrix $$ W $$ with a shape of $$(3073 $$ x $$ 10)$$. Note that the length of the first dimension matches the total number of (pixels + 1) within each image.  The additional pixel, (which was also added to each image set) is the addition of the bias vector $$ B $$ which influences the output score without directly interacting with the input training data. 
  
