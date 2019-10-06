@@ -44,34 +44,16 @@ class LinearClassifier(object):
             X_batch = None
             y_batch = None
 
-            #########################################################################
-            # TODO:                                                                 #
-            # Sample batch_size elements from the training data and their           #
-            # corresponding labels to use in this round of gradient descent.        #
-            # Store the data in X_batch and their corresponding labels in           #
-            # y_batch; after sampling X_batch should have shape (batch_size, dim)   #
-            # and y_batch should have shape (batch_size,)                           #
-            #                                                                       #
-            # Hint: Use np.random.choice to generate indices. Sampling with         #
-            # replacement is faster than sampling without replacement.              #
-            #########################################################################
-            # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
             i_range = np.random.choice(np.arange(X.shape[0]), batch_size)
             X_batch = X[i_range, :]
             y_batch = y[i_range]
-            # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
             # evaluate loss and gradient
             loss, grad = self.loss(X_batch, y_batch, reg)
             loss_history.append(loss)
 
             # perform parameter update
-            #########################################################################
-            # TODO:                                                                 #
-            # Update the weights using the gradient and the learning rate.          #
-            #########################################################################
-            # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+            # Update the weights using the gradient and the learning rate
 
             self.W += -learning_rate * grad
 
@@ -96,18 +78,10 @@ class LinearClassifier(object):
           array of length N, and each element is an integer giving the predicted
           class.
         """
-        y_pred = np.zeros(X.shape[0])
-        ###########################################################################
-        # TODO:                                                                   #
-        # Implement this method. Store the predicted labels in y_pred.            #
-        ###########################################################################
-        # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         
-        scores = X.dot(self.W)
-        for i in range(X.shape[0]):
-            y_pred[i] = np.where(scores[i] == scores[i].max())[0][0]
-        
-        # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+        # Predict image using the trained weight matrix
+        y_pred = np.argmax(X.dot(self.W), 1) 
+            
         return y_pred
 
     def loss(self, X_batch, y_batch, reg):

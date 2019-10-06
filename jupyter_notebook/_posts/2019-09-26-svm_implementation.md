@@ -8,21 +8,6 @@ math: true
 author: "J. Abbott"
 ---
 
-# Multiclass Support Vector Machine exercise
-
-*Complete and hand in this completed worksheet (including its outputs and any supporting code outside of the worksheet) with your assignment submission. For more details see the [assignments page](http://vision.stanford.edu/teaching/cs231n/assignments.html) on the course website.*
-
-In this exercise you will:
-    
-- implement a fully-vectorized **loss function** for the SVM
-- implement the fully-vectorized expression for its **analytic gradient**
-- **check your implementation** using numerical gradient
-- use a validation set to **tune the learning rate and regularization** strength
-- **optimize** the loss function with **SGD**
-- **visualize** the final learned weights
-
-
-
 ```python
 # Run some setup code for this notebook.
 import random
@@ -42,10 +27,6 @@ plt.rcParams['image.cmap'] = 'gray'
 %load_ext autoreload
 %autoreload 2
 ```
-
-    The autoreload extension is already loaded. To reload it, use:
-      %reload_ext autoreload
-    
 
 ## CIFAR-10 Data Loading and Preprocessing
 
@@ -99,7 +80,8 @@ plt.show()
 ```
 
 
-![png](/assets/png/svm_files/svm_4_0.png)
+![png](/assets/png/svm/svm_4_0.png)
+
 
 
 
@@ -204,7 +186,9 @@ print(X_train.shape, X_val.shape, X_test.shape, X_dev.shape)
     
 
 
-![png](/assets/png/svm_files/svm_7_1.png)
+![png](/assets/png/svm/svm_7_1.png)
+
+
 
 
     (49000, 3073) (1000, 3073) (1000, 3073) (500, 3073)
@@ -229,12 +213,9 @@ W = np.random.randn(3073, 10) * 0.0001
 loss, grad = svm_loss_naive(W, X_dev, y_dev, 0.000005)
 print('loss: %f' % (loss, ))
 #print('Gradient of Loss Function with respect to W: %', grad)
-
-print(grad.shape)
 ```
 
-    loss: 9.328917
-    (3073, 10)
+    loss: 9.009948
     
 
 The `grad` returned from the function above is right now all zero. Derive and implement the gradient for the SVM cost function and implement it inline inside the function `svm_loss_naive`. You will find it helpful to interleave your new code inside the existing function.
@@ -263,34 +244,27 @@ f = lambda w: svm_loss_naive(w, X_dev, y_dev, 5e1)[0]
 grad_numerical = grad_check_sparse(f, W, grad)
 ```
 
-    numerical: -9.911069 analytic: -9.911069, relative error: 6.429055e-12
-    numerical: -0.297111 analytic: -0.297111, relative error: 1.313949e-09
-    numerical: 27.152696 analytic: 27.152696, relative error: 3.698577e-12
-    numerical: 16.335394 analytic: 16.335394, relative error: 1.678946e-11
-    numerical: -10.070390 analytic: -10.070390, relative error: 2.451965e-12
-    numerical: -31.080151 analytic: -31.080151, relative error: 4.455845e-12
-    numerical: -6.080071 analytic: -6.080071, relative error: 6.479515e-11
-    numerical: -14.036087 analytic: -14.036087, relative error: 4.057968e-12
-    numerical: -15.671240 analytic: -15.671240, relative error: 2.181062e-11
-    numerical: 8.598423 analytic: 8.598423, relative error: 3.982135e-11
-    numerical: 19.041399 analytic: 19.042326, relative error: 2.434029e-05
-    numerical: -14.785947 analytic: -14.785169, relative error: 2.631313e-05
-    numerical: -5.514322 analytic: -5.517690, relative error: 3.052402e-04
-    numerical: 8.193264 analytic: 8.206178, relative error: 7.874301e-04
-    numerical: 10.920387 analytic: 10.916191, relative error: 1.921299e-04
-    numerical: 1.521554 analytic: 1.514612, relative error: 2.286305e-03
-    numerical: 26.663052 analytic: 26.667411, relative error: 8.173581e-05
-    numerical: 14.235721 analytic: 14.238423, relative error: 9.489959e-05
-    numerical: 2.348159 analytic: 2.354537, relative error: 1.356160e-03
-    numerical: -8.265507 analytic: -8.273468, relative error: 4.813983e-04
+    numerical: -1.427635 analytic: -1.497210, relative error: 2.378780e-02
+    numerical: 0.629017 analytic: 0.552066, relative error: 6.515333e-02
+    numerical: -4.783666 analytic: -4.836789, relative error: 5.521883e-03
+    numerical: -2.737096 analytic: -2.737096, relative error: 8.094983e-11
+    numerical: -35.135378 analytic: -35.133947, relative error: 2.036525e-05
+    numerical: 16.193813 analytic: 16.242888, relative error: 1.512972e-03
+    numerical: 2.117024 analytic: 2.117024, relative error: 5.781809e-11
+    numerical: -4.754289 analytic: -4.754289, relative error: 3.975646e-11
+    numerical: -34.942481 analytic: -34.937043, relative error: 7.783062e-05
+    numerical: 3.911415 analytic: 3.911415, relative error: 2.960998e-11
+    numerical: -17.359753 analytic: -17.360248, relative error: 1.424986e-05
+    numerical: 13.603556 analytic: 13.605670, relative error: 7.771505e-05
+    numerical: -6.239910 analytic: -6.271963, relative error: 2.561834e-03
+    numerical: -18.608776 analytic: -18.598920, relative error: 2.648993e-04
+    numerical: 18.581689 analytic: 18.579512, relative error: 5.860116e-05
+    numerical: 21.625559 analytic: 21.627082, relative error: 3.522931e-05
+    numerical: 23.269252 analytic: 23.270786, relative error: 3.295696e-05
+    numerical: 20.114998 analytic: 20.117100, relative error: 5.225250e-05
+    numerical: 15.177704 analytic: 15.238198, relative error: 1.988899e-03
+    numerical: -4.839053 analytic: -4.845355, relative error: 6.507791e-04
     
-
-**Inline Question 1**
-
-It is possible that once in a while a dimension in the gradcheck will not match exactly. What could such a discrepancy be caused by? Is it a reason for concern? What is a simple example in one dimension where a gradient check could fail? How would change the margin affect of the frequency of this happening? *Hint: the SVM loss function is not strictly speaking differentiable*
-
-$\color{blue}{\textit Your Answer:}$ *fill this in.*  
-
 
 
 ```python
@@ -311,8 +285,8 @@ print('Vectorized loss: %e computed in %fs' % (loss_vectorized, toc - tic))
 print('difference: %f' % (loss_naive - loss_vectorized))
 ```
 
-    Naive loss: 9.328917e+00 computed in 0.113696s
-    Vectorized loss: 9.328917e+00 computed in 0.004987s
+    Naive loss: 9.009948e+00 computed in 0.197585s
+    Vectorized loss: 9.009948e+00 computed in 0.020286s
     difference: 0.000000
     
 
@@ -340,8 +314,8 @@ difference = np.linalg.norm(grad_naive - grad_vectorized, ord='fro')
 print('difference: %f' % difference)
 ```
 
-    Naive loss and gradient: computed in 0.120676s
-    Vectorized loss and gradient: computed in 0.003989s
+    Naive loss and gradient: computed in 0.195149s
+    Vectorized loss and gradient: computed in 0.004495s
     difference: 0.000000
     
 
@@ -357,27 +331,27 @@ from cs231n.classifiers import LinearSVM
 svm = LinearSVM()
 tic = time.time()
 loss_hist = svm.train(X_train, y_train, learning_rate=1e-7, reg=2.5e4,
-                      num_iters=1500, verbose=True)
+                      num_iters=1500, batch_size=200, verbose=True)
 toc = time.time()
 print('That took %fs' % (toc - tic))
 ```
 
-    iteration 0 / 1500: loss 404.701562
-    iteration 100 / 1500: loss 240.079400
-    iteration 200 / 1500: loss 146.255012
-    iteration 300 / 1500: loss 89.785761
-    iteration 400 / 1500: loss 55.809313
-    iteration 500 / 1500: loss 35.454242
-    iteration 600 / 1500: loss 23.435388
-    iteration 700 / 1500: loss 16.314862
-    iteration 800 / 1500: loss 11.899499
-    iteration 900 / 1500: loss 8.992490
-    iteration 1000 / 1500: loss 7.182553
-    iteration 1100 / 1500: loss 6.703373
-    iteration 1200 / 1500: loss 6.024896
-    iteration 1300 / 1500: loss 5.581861
-    iteration 1400 / 1500: loss 5.205857
-    That took 7.249155s
+    iteration 0 / 1500: loss 400.177696
+    iteration 100 / 1500: loss 239.166708
+    iteration 200 / 1500: loss 145.709877
+    iteration 300 / 1500: loss 89.749298
+    iteration 400 / 1500: loss 55.983948
+    iteration 500 / 1500: loss 35.882957
+    iteration 600 / 1500: loss 23.684348
+    iteration 700 / 1500: loss 16.331219
+    iteration 800 / 1500: loss 12.441470
+    iteration 900 / 1500: loss 8.510883
+    iteration 1000 / 1500: loss 7.446843
+    iteration 1100 / 1500: loss 6.540311
+    iteration 1200 / 1500: loss 5.422131
+    iteration 1300 / 1500: loss 5.788476
+    iteration 1400 / 1500: loss 5.631743
+    That took 11.900724s
     
 
 
@@ -390,8 +364,7 @@ plt.ylabel('Loss value')
 plt.show()
 ```
 
-
-![png](/assets/png/svm_files/svm_17_0.png)
+![png](/assets/png/svm/svm_16_0.png)
 
 
 
@@ -404,8 +377,8 @@ y_val_pred = svm.predict(X_val)
 print('validation accuracy: %f' % (np.mean(y_val == y_val_pred), ))
 ```
 
-    training accuracy: 0.376714
-    validation accuracy: 0.396000
+    training accuracy: 0.381224
+    validation accuracy: 0.379000
     
 
 
@@ -417,9 +390,6 @@ print('validation accuracy: %f' % (np.mean(y_val == y_val_pred), ))
 
 #Note: you may see runtime/overflow warnings during hyper-parameter search. 
 # This may be caused by extreme values, and is not a bug.
-
-learning_rates = [1e-7, 5e-5]
-regularization_strengths = [2.5e4, 5e4]
 
 learning_rates = [1e-8, 1e-7, 2e-7]
 regularization_strengths = [1e4, 2e4, 3e4, 4e4, 5e4, 6e4, 7e4, 8e4, 1e5]
@@ -472,37 +442,34 @@ for lr, reg in sorted(results):
 print('best validation accuracy achieved during cross-validation: %f' % best_val)
 ```
 
-    Processing learning rate: 1e-08
-    Processing learning rate: 1e-07
-    Processing learning rate: 2e-07
-    lr 1.000000e-08 reg 1.000000e+04 train accuracy: 0.220163 val accuracy: 0.230000
-    lr 1.000000e-08 reg 2.000000e+04 train accuracy: 0.231571 val accuracy: 0.226000
-    lr 1.000000e-08 reg 3.000000e+04 train accuracy: 0.246673 val accuracy: 0.248000
-    lr 1.000000e-08 reg 4.000000e+04 train accuracy: 0.250000 val accuracy: 0.255000
-    lr 1.000000e-08 reg 5.000000e+04 train accuracy: 0.258204 val accuracy: 0.282000
-    lr 1.000000e-08 reg 6.000000e+04 train accuracy: 0.252959 val accuracy: 0.264000
-    lr 1.000000e-08 reg 7.000000e+04 train accuracy: 0.262571 val accuracy: 0.272000
-    lr 1.000000e-08 reg 8.000000e+04 train accuracy: 0.278122 val accuracy: 0.292000
-    lr 1.000000e-08 reg 1.000000e+05 train accuracy: 0.299857 val accuracy: 0.302000
-    lr 1.000000e-07 reg 1.000000e+04 train accuracy: 0.373735 val accuracy: 0.387000
-    lr 1.000000e-07 reg 2.000000e+04 train accuracy: 0.381531 val accuracy: 0.389000
-    lr 1.000000e-07 reg 3.000000e+04 train accuracy: 0.379184 val accuracy: 0.381000
-    lr 1.000000e-07 reg 4.000000e+04 train accuracy: 0.372898 val accuracy: 0.379000
-    lr 1.000000e-07 reg 5.000000e+04 train accuracy: 0.374041 val accuracy: 0.386000
-    lr 1.000000e-07 reg 6.000000e+04 train accuracy: 0.369367 val accuracy: 0.376000
-    lr 1.000000e-07 reg 7.000000e+04 train accuracy: 0.363735 val accuracy: 0.364000
-    lr 1.000000e-07 reg 8.000000e+04 train accuracy: 0.362510 val accuracy: 0.364000
-    lr 1.000000e-07 reg 1.000000e+05 train accuracy: 0.353837 val accuracy: 0.360000
-    lr 2.000000e-07 reg 1.000000e+04 train accuracy: 0.392184 val accuracy: 0.401000
-    lr 2.000000e-07 reg 2.000000e+04 train accuracy: 0.373980 val accuracy: 0.380000
-    lr 2.000000e-07 reg 3.000000e+04 train accuracy: 0.373939 val accuracy: 0.379000
-    lr 2.000000e-07 reg 4.000000e+04 train accuracy: 0.364735 val accuracy: 0.371000
-    lr 2.000000e-07 reg 5.000000e+04 train accuracy: 0.361592 val accuracy: 0.374000
-    lr 2.000000e-07 reg 6.000000e+04 train accuracy: 0.357592 val accuracy: 0.357000
-    lr 2.000000e-07 reg 7.000000e+04 train accuracy: 0.356918 val accuracy: 0.364000
-    lr 2.000000e-07 reg 8.000000e+04 train accuracy: 0.355898 val accuracy: 0.359000
-    lr 2.000000e-07 reg 1.000000e+05 train accuracy: 0.348245 val accuracy: 0.360000
-    best validation accuracy achieved during cross-validation: 0.401000
+    lr 1.000000e-08 reg 1.000000e+04 train accuracy: 0.217857 val accuracy: 0.224000
+    lr 1.000000e-08 reg 2.000000e+04 train accuracy: 0.232388 val accuracy: 0.240000
+    lr 1.000000e-08 reg 3.000000e+04 train accuracy: 0.241490 val accuracy: 0.238000
+    lr 1.000000e-08 reg 4.000000e+04 train accuracy: 0.245286 val accuracy: 0.260000
+    lr 1.000000e-08 reg 5.000000e+04 train accuracy: 0.247714 val accuracy: 0.256000
+    lr 1.000000e-08 reg 6.000000e+04 train accuracy: 0.259571 val accuracy: 0.252000
+    lr 1.000000e-08 reg 7.000000e+04 train accuracy: 0.264898 val accuracy: 0.294000
+    lr 1.000000e-08 reg 8.000000e+04 train accuracy: 0.281082 val accuracy: 0.308000
+    lr 1.000000e-08 reg 1.000000e+05 train accuracy: 0.307102 val accuracy: 0.314000
+    lr 1.000000e-07 reg 1.000000e+04 train accuracy: 0.374531 val accuracy: 0.370000
+    lr 1.000000e-07 reg 2.000000e+04 train accuracy: 0.384673 val accuracy: 0.383000
+    lr 1.000000e-07 reg 3.000000e+04 train accuracy: 0.380224 val accuracy: 0.385000
+    lr 1.000000e-07 reg 4.000000e+04 train accuracy: 0.374163 val accuracy: 0.381000
+    lr 1.000000e-07 reg 5.000000e+04 train accuracy: 0.370714 val accuracy: 0.389000
+    lr 1.000000e-07 reg 6.000000e+04 train accuracy: 0.364571 val accuracy: 0.379000
+    lr 1.000000e-07 reg 7.000000e+04 train accuracy: 0.365204 val accuracy: 0.365000
+    lr 1.000000e-07 reg 8.000000e+04 train accuracy: 0.354367 val accuracy: 0.366000
+    lr 1.000000e-07 reg 1.000000e+05 train accuracy: 0.358224 val accuracy: 0.364000
+    lr 2.000000e-07 reg 1.000000e+04 train accuracy: 0.381102 val accuracy: 0.363000
+    lr 2.000000e-07 reg 2.000000e+04 train accuracy: 0.377531 val accuracy: 0.378000
+    lr 2.000000e-07 reg 3.000000e+04 train accuracy: 0.372265 val accuracy: 0.375000
+    lr 2.000000e-07 reg 4.000000e+04 train accuracy: 0.358224 val accuracy: 0.368000
+    lr 2.000000e-07 reg 5.000000e+04 train accuracy: 0.365980 val accuracy: 0.367000
+    lr 2.000000e-07 reg 6.000000e+04 train accuracy: 0.352714 val accuracy: 0.363000
+    lr 2.000000e-07 reg 7.000000e+04 train accuracy: 0.350612 val accuracy: 0.356000
+    lr 2.000000e-07 reg 8.000000e+04 train accuracy: 0.350694 val accuracy: 0.356000
+    lr 2.000000e-07 reg 1.000000e+05 train accuracy: 0.343633 val accuracy: 0.368000
+    best validation accuracy achieved during cross-validation: 0.389000
     
 
 
@@ -522,6 +489,19 @@ plt.xlabel('log learning rate')
 plt.ylabel('log regularization strength')
 plt.title('CIFAR-10 training accuracy')
 
+```
+
+
+
+
+    Text(0.5,1,'CIFAR-10 training accuracy')
+
+
+![png](/assets/png/svm/svm_19_1.png)
+
+
+
+```python
 # plot validation accuracy
 colors = [results[x][1] for x in results] # default size of markers is 20
 plt.subplot(2, 1, 2)
@@ -534,7 +514,8 @@ plt.show()
 ```
 
 
-![png](/assets/png/svm_files/svm_20_0.png)
+![png](/assets/png/svm/svm_20_0.png)
+
 
 
 
@@ -545,7 +526,7 @@ test_accuracy = np.mean(y_test == y_test_pred)
 print('linear SVM on raw pixels final test set accuracy: %f' % test_accuracy)
 ```
 
-    linear SVM on raw pixels final test set accuracy: 0.365000
+    linear SVM on raw pixels final test set accuracy: 0.350000
     
 
 
@@ -568,12 +549,6 @@ for i in range(10):
 ```
 
 
-![png](/assets/png/svm_files/svm_22_0.png)
+![png](/assets/png/svm/svm_22_0.png)
 
-
-**Inline question 2**
-
-Describe what your visualized SVM weights look like, and offer a brief explanation for why they look they way that they do.
-
-$\color{blue}{\textit Your Answer:}$ *fill this in*  
 
