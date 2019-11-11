@@ -8,7 +8,7 @@ math: true
 author: "J. Abbott"
 ---
 
-> Self Guided study of the [course notes](http://cs231n.github.io/)[^1] for cs231n: Convolutional Neural Networks for Visual Recognition provided Stanford University. Included in this page are references to the classes and function calls developed by Stanford university and others[^2] who have worked through this course material. The complete implementation of the [SVM classifier](/jupyter_notebook/jupyter%20notebooks/2019/09/26/svm_implementation.html) has been exported as a final Markdown file and can be found in the [Jupyter Notebooks](/jupyter_notebooks/) section of this site.
+> Self Guided study of the [course notes](http://cs231n.github.io/)[^1] for cs231n: Convolutional Neural Networks for Visual Recognition provided through Stanford University. Included in this page are references to the classes and function calls developed by Stanford university and others[^2] who have worked through this course material. The complete implementation of the [SVM classifier](/jupyter_notebook/jupyter%20notebooks/2019/09/26/svm_implementation.html) has been exported as a final Markdown file and can be found in the [Jupyter Notebooks](/jupyter_notebooks/) section of this site.
 
 In this section, we continue the task of image classification on the CIFAR-10 labeled dataset. In this approach we'll implement the Support Vector Machine, (SVM), a linear classification, supervised learning algorithm that works to identify the optimal hyperplane for linearly separable patterns.The final output of the model is a class identity. The SVM uses a linear function which assumes a boundary exists that separates one class boundary from another. The primary goal of the SVM is to efficiently find the boundary which separates one class from another. In this implementation, we will utilize a linear score function to compute a class score for the input data set. The output score can then be used within a loss function to better determine the success of the linear score function. Stochastic Gradient Descent will then be utilized as the optimization algorithm to minimize the loss obtained by the loss function. 
 
@@ -463,7 +463,6 @@ __Figure 6:__ _Visualization of learned weights_
 
 
 Unlike the [knn-implementation](/documentation/2019/09/19/K-Nearest-Neighbor-Classifier.html) previously discussed, the training data is discarded once the trained parameters $$W$$ are learned. When making a prediction, the paramaters are used in a single dot product operation which is computationally inexpensive. However, this implemenation of the SVM has its limitation when it comes to over generalization. As was shown in figure 6, the templates for various classes have a tendancy to be categorized based on a dominant color within the background, (as opposed to the object itself).    
-
 
 
 # <a name="Ref"></a> References
