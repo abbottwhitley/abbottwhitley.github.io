@@ -40,7 +40,7 @@ $$
 s = W_2 * max(0, X * W_1)
 $$ 
 
-In this representation, the use of the $$max()$$ function serves as an activation function to the network. This application provides us with a non-linearity which separates the two weight matrices, allowing us to train each set of parameters through SGD. This implementation of a neural network effectively executes a series of linear mapping functions which are tied together through activation functions, (i.e. non-linear functions). A simple visualization of this network is shown in Figure 1.
+In this representation, the use of the $$max()$$ function serves as a ReLU activation function to the network, (discussed below). This application provides us with a non-linearity which separates the two weight matrices, allowing us to train each set of parameters through SGD. This implementation of a neural network effectively executes a series of linear mapping functions which are tied together through activation functions, (i.e. non-linear functions). A simple visualization of this network is shown in Figure 1.
 
 ![png](/assets/png/2lnn/2LNN.png)
 __Figure 1:__ _Graphical Representation of a Two Layer Neural Network_
@@ -116,9 +116,34 @@ scores = a1.dot(W2) + b2
 
 # <a name="activation-function"></a> Activation Function
 
+Using a biological neuron as a model, the activation function is used to model the firing rate of a neuron. In the biological model, each neuron receives input information from its dendrites and produces output information along the axon which is then carried to other neurons. We model the input information as a multiplication of the input data $$X$$ and the learned weights $$W$$ which represent the synaptic strength of the neuron. If the linear combination of this input information exceeds a certain threshold, than the neuron will "fire", sending and output signal along the axon to other neurons. We model this functionality using the Rectified Linear Unit, (ReLU), function which computes the function $$f(x) = max(0, x)$$. Similar to the biological neuron, the input provided to the ReLU function is the output from the linear scoring function $$s = xW$$, which corresponds to the input data and learned weights. From here the ReLU, (i.e. activation function) will than output the linear scoring function $$s$$ if the value of said score exceeds a certain threshold, (i.e. zero). Other commonly used activation functions include the sigmoid function, Tanh, ReLU, Leaky ReLU and Maxout, all of which are discussed in great detail under the [Neural Networks Part 1 - Commonly Used Activation Functions](http://cs231n.github.io/neural-networks-1/#actfun) section of the course notes. For our purposes, we'll stick with the Rectified Linear Unit, (ReLU). 
 
 
 # <a name="loss-function"></a> Loss Function
+
+Using the [Minimal Neural Network Case Study](http://cs231n.github.io/neural-networks-case-study/#loss) section from the course notes as a reference for computing the loss, we can implement the loss function for a Softmax classifier. The loss of the class scores using the loss function is defined as:
+
+$$ 
+L_i = -log( {e^{f_{y_i}} \over \sum_{j}e^{f_j}}) 
+$$
+
+As mentioned in the same section, "the full Softmax classifier loss is then defined as the average cross-entropy loss over the training examples and the regularization"[^1]:
+
+$$
+L = {1\over N} \sum_i{L_i} + {1\over 2} \lambda \sum_k \sum_l W_{k,l}^{2} 
+$$
+
+
+
+```python
+exp_scores = np.exp(scores)
+probs = exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
+
+corect_logprobs = -np.log(probs[range(N), y])
+data_loss = np.sum(corect_logprobs) / N
+reg_loss = reg * np.sum(W1 * W1) + reg * np.sum(W2 * W2)
+loss = data_loss + reg_loss
+```
 # <a name="reg"></a> Regularization
 ### <a name="backprop"></a> SGD With Through Backpropogation
 ### <a name="param-updates"></a> Parameter Updates
