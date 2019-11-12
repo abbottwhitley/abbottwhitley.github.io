@@ -121,7 +121,7 @@ Using a biological neuron as a model, the activation function is used to model t
 
 # <a name="loss-function"></a> Loss Function
 
-Using the [Minimal Neural Network Case Study](http://cs231n.github.io/neural-networks-case-study/#loss) section from the course notes as a reference for computing the loss, we can implement the loss function for a Softmax classifier. The loss of the class scores using the loss function is defined as:
+Using the [Minimal Neural Network Case Study](http://cs231n.github.io/neural-networks-case-study/#loss)[^1] section from the course notes as a reference for computing the loss, we can implement the loss function for a Softmax classifier. The loss of the class scores using the loss function is defined as:
 
 $$ 
 L_i = -log( {e^{f_{y_i}} \over \sum_{j}e^{f_j}}) 
@@ -134,20 +134,107 @@ L = {1\over N} \sum_i{L_i} + {1\over 2} \lambda \sum_k \sum_l W_{k,l}^{2}
 $$
 
 
-
 ```python
 exp_scores = np.exp(scores)
 probs = exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
 
 corect_logprobs = -np.log(probs[range(N), y])
 data_loss = np.sum(corect_logprobs) / N
-reg_loss = reg * np.sum(W1 * W1) + reg * np.sum(W2 * W2)
+reg_loss = 0.5 * reg * np.sum(W1 * W1) + 0.5 * reg * np.sum(W2 * W2)
 loss = data_loss + reg_loss
 ```
 # <a name="reg"></a> Regularization
-### <a name="backprop"></a> SGD With Through Backpropogation
+
+As shown in the code snippet above, regularization is applied to the loss function to avoid over fitting. Over fitting occurs when the model learns to many of the details within the data set, including undesirable information such as noise. Regularization allows us to prevent over fitting by causing the network to generalize information affectively thus improving overall performance. In this section, we implement L2 regularization, which has the affect of penalizing the squared magnitude of the weight matrices $$W$$. L2 regularization is also known as weight decay since it has the effect of causing the weights to decay towards zero. Note that the regularization strength $$\lambda$$ is one of the hyperparameters we'll analyze at a later step as part of hyperparameter optimization.  
+
+### <a name="backprop"></a> SGD Through Backpropogation
+
+From the [Minimal Neural Network Case Study](http://cs231n.github.io/neural-networks-case-study/#loss)[^1] in the course notes, we're given the following expression along with the final evaluation for the gradient $${\partial L_i \over \partial f_k}$$.
+
+$$
+p_k = {e^{f_k} \over \sum_j e^{f_j}} 
+$$
+
+$$
+L_i = -log(p_{y_i})
+$$
+
+$$
+{\partial L_i \over \partial f_k} = (p_k-1)(y_i = k)
+$$
+
+```python
+# compute gradient on scores
+dscores = probs
+dscores[range(N),y] -= 1
+dscores /= N
+```
+With the gradient for the scores available, we can now backpropogate through the two layer network and calculate the gradient with respect to the weight and bias parameters. We can evaluate these expressions through dimension analysis and identification of various [Patterns in backward flow](http://cs231n.github.io/optimization-2/#patterns)[^1]. As described in the course notes, the local gradient of a multiply gate has the property of multiplying the input parameters against the backpropogated gradient received from the "downstream" function. For example, given the following expression,
+
+$$
+w * x = d
+$$ 
+
+And given the gradient of the end function $$f$$ with respect to $$d$$
+
+$$
+{\partial f \over \partial d}
+$$
+
+The $${\partial f \over \partial w}$$ through backpropogation is derived as:
+
+$$ \begin{aligned}
+{\partial f \over \partial w}   &= {\partial f \over \partial d}{\partial f \over \partial w} \\
+                                &= {\partial f \over \partial d}{\partial \over \partial w}(w * x) \\
+                                &= {\partial f \over \partial d} x
+\end{aligned}$$
+
+By intuition:
+
+$$
+{\partial f \over \partial x} = {\partial f \over \partial d} w
+$$ 
+
+
+Extending this analysis to [Gradients of vectorized operations](http://cs231n.github.io/optimization-2/#mat)[^1], we can apply the same logic and deduce the organization of the matrix multiplication by analysis of each matrices dimensions. The final implementation is given below.
+
+```Python
+# gradient for W2 and b2
+grads['W2'] = np.dot(a1.T, dscores)
+grads['b2'] = np.sum(dscores, axis=0)
+
+# Backpropagate to h1
+dh1 = np.dot(dscores, W2.T)
+
+# Backpropagate ReLU non-linearity
+dh1[a1 <= 0] = 0
+
+# 
+grads['W1'] = np.dot(X.T, dh1)
+grads['b1'] = np.sum(dh1, axis=0)
+                
+grads['W2'] += 2 * reg * W2
+grads['W1'] += 2 * reg * W1
+```
+
 ### <a name="param-updates"></a> Parameter Updates
+
+Having calculated the gradients, we can now perform a parameter update. For this implementation, we'll stick with the "vanilla update" which updates the parameters along the negative gradient direction and scales the update according to the learning rate constant. 
+
+```python
+self.params['W1'] += -learning_rate * grads['W1']
+self.params['b1'] += -learning_rate * grads['b1']
+self.params['W2'] += -learning_rate * grads['W2']
+self.params['b2'] += -learning_rate * grads['b2']  
+```
+
 ## <a name="predict"></a> Prediction
+
+```python
+hidden_layer = np.maximum(0, np.dot(X, self.params['W1']) + self.params['b1'])
+scores = np.dot(hidden_layer, self.params['W2']) + self.params['b2']
+y_pred = np.argmax(scores, axis=1)
+```
 
 ## <a name="dev-CIFAR"></a> Development (CIFAR-10)
 ### <a name="pre-processing"></a> Data Pre-Processing
@@ -169,6 +256,6 @@ X_test -= mean_image
 
 [^1]: CS231n Stanford University (2015, Aug).Convolutional Neural Networks for Visual Recognition [Web log post]. Retrieved from [http://cs231n.stanford.edu/](http://cs231n.stanford.edu/)
 
-[^2]: Miranda, L. J. (2017, Feb 17). Implementing a multiclass support-vector machine [Web log post]. Retrieved from [https://ljvmiranda921.github.io/notebook/2017/02/17/artificial-neural-networks/](https://ljvmiranda921.github.io/notebook/2017/02/17/artificial-neural-networks/)
+[^2]: Miranda, L. J. (2017, Feb 17). Implementing a two-layer neural network from scratch [Web log post]. Retrieved from [https://ljvmiranda921.github.io/notebook/2017/02/17/artificial-neural-networks/](https://ljvmiranda921.github.io/notebook/2017/02/17/artificial-neural-networks/)
 
 [^3]: Voss, C. (2015, Sep 22).  CNN-Assignments [Web log post]. Retrieved from [https://github.com/CatalinVoss/cnn-assignments/tree/master/assignment1](https://github.com/CatalinVoss/cnn-assignments/tree/master/assignment1)
