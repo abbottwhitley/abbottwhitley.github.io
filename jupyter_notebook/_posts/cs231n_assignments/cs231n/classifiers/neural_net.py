@@ -38,6 +38,7 @@ class TwoLayerNet(object):
         - output_size: The number of classes C.
         """
         self.params = {}
+        np.random.seed(0)
         self.params['W1'] = std * np.random.randn(input_size, hidden_size)
         self.params['b1'] = np.zeros(hidden_size)
         self.params['W2'] = std * np.random.randn(hidden_size, output_size)
@@ -80,8 +81,15 @@ class TwoLayerNet(object):
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
-
+        # First layer linear score function
+        h1 = X.dot(W1) + b1
+        
+        # First layer activation function
+        a1 = np.maximum(0, h1)
+        
+        # Output Layer score function
+        scores = a1.dot(W2) + b2
+        
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         # If the targets are not given then jump out, we're done
@@ -98,7 +106,14 @@ class TwoLayerNet(object):
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+
+        exp_scores = np.exp(scores)
+        probs = exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
+
+        corect_logprobs = -np.log(probs[range(N), y])
+        data_loss = np.sum(corect_logprobs) / N
+        reg_loss = reg * np.sum(W1 * W1) + reg * np.sum(W2 * W2)
+        loss = data_loss + reg_loss
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -111,7 +126,25 @@ class TwoLayerNet(object):
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+        dscores = probs
+        dscores[range(N),y] -= 1
+        dscores /= N
+        # W2 and b2
+        grads['W2'] = np.dot(a1.T, dscores)
+        grads['b2'] = np.sum(dscores, axis=0)
+        
+        # Propagate to hidden layer
+        dhidden = np.dot(dscores, W2.T)
+        
+        # Backprop the ReLU non-linearity
+        dhidden[a1 <= 0] = 0
+        
+        # Finally into W,b
+        grads['W1'] = np.dot(X.T, dhidden)
+        grads['b1'] = np.sum(dhidden, axis=0)
+                        
+        grads['W2'] += 2 * reg * W2
+        grads['W1'] += 2 * reg * W1
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -156,7 +189,9 @@ class TwoLayerNet(object):
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
+            idx = np.random.choice(range(X.shape[0]), batch_size)
+            X_batch = X[idx]
+            y_batch = y[idx]
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -172,8 +207,11 @@ class TwoLayerNet(object):
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
-
+            self.params['W1'] += -learning_rate * grads['W1']
+            self.params['b1'] += -learning_rate * grads['b1']
+            self.params['W2'] += -learning_rate * grads['W2']
+            self.params['b2'] += -learning_rate * grads['b2']           
+              
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
             if verbose and it % 100 == 0:
@@ -218,7 +256,9 @@ class TwoLayerNet(object):
         ###########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+        hidden_layer = np.maximum(0, np.dot(X, self.params['W1']) + self.params['b1'])
+        scores = np.dot(hidden_layer, self.params['W2']) + self.params['b2']
+        y_pred = np.argmax(scores, axis=1)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 

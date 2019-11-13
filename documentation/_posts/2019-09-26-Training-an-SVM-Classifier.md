@@ -10,7 +10,7 @@ author: "J. Abbott"
 
 > Self Guided study of the [course notes](http://cs231n.github.io/)[^1] for cs231n: Convolutional Neural Networks for Visual Recognition provided through Stanford University. Included in this page are references to the classes and function calls developed by Stanford university and others[^2] who have worked through this course material. The complete implementation of the [SVM classifier](/jupyter_notebook/jupyter%20notebooks/2019/09/26/svm_implementation.html) has been exported as a final Markdown file and can be found in the [Jupyter Notebooks](/jupyter_notebooks/) section of this site.
 
-In this section, we continue the task of image classification on the CIFAR-10 labeled dataset. In this approach we'll implement the Support Vector Machine, (SVM), a linear classification, supervised learning algorithm that works to identify the optimal hyperplane for linearly separable patterns.The final output of the model is a class identity. The SVM uses a linear function which assumes a boundary exists that separates one class boundary from another. The primary goal of the SVM is to efficiently find the boundary which separates one class from another. In this implementation, we will utilize a linear score function to compute a class score for the input data set. The output score can then be used within a loss function to better determine the success of the linear score function. Stochastic Gradient Descent will then be utilized as the optimization algorithm to minimize the loss obtained by the loss function. 
+In this section, we continue the task of image classification on the CIFAR-10[^3] [^4] labeled dataset. In this approach we'll implement the Support Vector Machine, (SVM), a linear classification, supervised learning algorithm that works to identify the optimal hyperplane for linearly separable patterns.The final output of the model is a class identity. The SVM uses a linear function which assumes a boundary exists that separates one class boundary from another. The primary goal of the SVM is to efficiently find the boundary which separates one class from another. In this implementation, we will utilize a linear score function to compute a class score for the input data set. The output score can then be used within a loss function to better determine the success of the linear score function. Stochastic Gradient Descent will then be utilized as the optimization algorithm to minimize the loss obtained by the loss function. 
 
 - [Loading the CIFAR-10 dataset](#loading-the-cifar-10-dataset)
 - [Data Pre-Processing](#pre-processing)
@@ -408,10 +408,11 @@ iteration 1400 / 1500: loss 5.546934
 ```
 
 Plotting the results of the training model.
-![png](/assets/png/svm/svm_16_0.png)
-__Figure 3:__ _Training the SVM through Stochastic Gradient Descent_
+![png](/assets/png/svm/svm_16_0.png){:width="560px"}
 {: style="text-align: center;"} 
 
+__Figure 3:__ _Training the SVM through Stochastic Gradient Descent_
+{: style="text-align: center;"} 
 
 We can now evaluate the performance of the model against the training set and validation set. Calculating the linear score function $$f(x_{i},W)$$ using the trained parameters $$W$$, we take the max value for each class to identify the predicted class. 
 
@@ -469,3 +470,6 @@ Unlike the [knn-implementation](/documentation/2019/09/19/K-Nearest-Neighbor-Cla
 
 [^1]: CS231n Stanford University (2015, Aug).Convolutional Neural Networks for Visual Recognition [Web log post]. Retrieved from http://cs231n.stanford.edu/
 [^2]: Miranda, L. J. (2017, Feb 11).Implementing a multiclass support-vector machine [Web log post]. Retrieved from https://ljvmiranda921.github.io/notebook/2017/02/11/multiclass-svm/
+[^3]: Krizhevsky, A., Nair, V., and Hinton, G. (2009). CIFAR-10 (Canadian Institute for Advanced Research) [Web log post]. Retrieved from [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~kriz/cifar.html)
+[^4]: Krizhevsky, A., 2009. [Learning Multiple Layers of Features from Tiny Images](https://www.cs.toronto.edu/~kriz/learning-features-2009-TR.pdf)
+
