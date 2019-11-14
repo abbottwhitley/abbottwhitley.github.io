@@ -198,7 +198,7 @@ $$
 
 Extending this analysis to [Gradients of vectorized operations](http://cs231n.github.io/optimization-2/#mat)[^1], we can apply the same logic and deduce the organization of the matrix multiplication by analysis of each matrices dimensions. The final implementation is given below.
 
-```Python
+```python
 # gradient for W2 and b2
 grads['W2'] = np.dot(a1.T, dscores)
 grads['b2'] = np.sum(dscores, axis=0)
@@ -308,7 +308,13 @@ stats = net.train(X_train, y_train, X_val, y_val,
             learning_rate=1e-4, learning_rate_decay=0.95,
             reg=0.25, verbose=True)
 ```
-Setting the verbose parameter equal to True, we can view the convergence of the loss function as we train the network. From this simple output, we see that the results are not favorable, converging at a value around 1.967. Moreover, testing the trained network against the validation data set, we receive an accuracy of 28%. Comparing these results to that of the [SVM](http://localhost:4000/documentation/2019/09/26/Training-an-SVM-Classifier.html#Hyperparameter-tuning) from the previous section, where we obtained an accuracy of 38.9%, we can conclude that the network is not performing optimally. This then leads to the task of debugging and hyper parameter tuning.  
+Setting the verbose parameter equal to True, we can view the convergence of the loss function as we train the network. From this simple output, we see that the results are not favorable, converging at a value around 1.967. Moreover, testing the trained network against the validation data set, we receive an accuracy of 28.2%. Comparing these results to that of the [SVM](http://localhost:4000/documentation/2019/09/26/Training-an-SVM-Classifier.html#Hyperparameter-tuning) from the previous section, where we obtained an accuracy of 38.9%, we can conclude that the network is not performing optimally. This leads us to the task of debugging and hyper parameter tuning. In Figure 5, we visualiz the results of the learned parameters from this effort. 
+
+![png](/assets/png/2lnn/output_21_0.png){:width="560px"}
+{: style="text-align: center;"} 
+
+__Figure 5:__ _Learned Parameters_
+{: style="text-align: center;"}   
 
 ```python
 iteration 0 / 1000: loss 2.302976
@@ -331,27 +337,92 @@ Validation accuracy:  0.282
 
 ## <a name="Hyperparameter-tuning"></a> Hyperparameter Tuning
 
+As stated, we wish to optimize our network through hyper parameter tuning. By observation of Figure 6, the gap between the training accuracy and the validation accuracy remains low, which provides reassurance that we're not over fitting. However, we can better understand the affects of regularization strength on the model by fine tunning the regularization strength. Another hyperparameter to analyze is the learning rate. Large learning rates have the tendency to result in unstable training, causing the model to converge rapidly to a suboptimal solution. Small leaning rates on the other hand risk getting stuck and fail to train the network. Finally, we'll look at the total number of training iterations as well as how adjustments to the number of neurons in the hidden layer affect overall performance. Again, looking at Figure 6, the validation accuracy maintains an upward slope through training, suggesting that we simply haven't provided the network with enough iterations. 
+
 
 ![png](/assets/png/2lnn/output_19_0.png){:width="560px"}
 {: style="text-align: center;"} 
 
-__Figure 5:__ _..._
+__Figure 6:__ _Training Results: Loss, Training Accuracy, & Validation Accuracy_
 {: style="text-align: center;"} 
 
 
-![png](/assets/png/2lnn/output_21_0.png){:width="560px"}
+```python
+best_net = None # store the best model into this 
+
+best_val = -1
+best_stats = None
+h = [100, 150, 200]
+learning_rates = [1e-3, 1e-4, 1e-5]
+regularization_strengths = [0.3, 0.4, 0.5]
+results = {}
+iters = 3000
+for hidden_size in h:
+    for lr in learning_rates:
+        for rs in regularization_strengths:
+            net = TwoLayerNet(input_size, hidden_size, num_classes)
+
+            # Train the network
+            stats = net.train(X_train, y_train, X_val, y_val,
+                        num_iters=iters, batch_size=200,
+                        learning_rate=lr, learning_rate_decay=0.95,
+                        reg=rs, verbose=True)
+
+            # Make predictions against training set
+            train_pred = net.predict(X_train)
+            # Get average training prediction accuracy
+            train_acc = np.mean(y_train == y_train_pred)
+            # Make predictions against validation set
+            val_pred = net.predict(X_val)
+            # Get average validation prediction accuracy
+            val_acc = np.mean(y_val == val_pred)
+
+            # Store results in dictionary using hyperparameters as key values
+            results[(hidden_size, lr, rs)] = (hidden_size, train_acc, val_acc)
+
+            # Update best validation accuracy if better results are obtained
+            if val_acc > best_val:
+                best_stats = stats
+                best_val = val_acc
+                best_net = net
+
+# Print out results.
+for h, lr, reg in sorted(results):
+    hidden_size, train_accuracy, val_accuracy = results[(h, lr, reg)]
+    print('h %s lr %e reg %e train accuracy: %f val accuracy: %f' % (
+                h, lr, reg, train_accuracy, val_accuracy))
+
+print('best validation accuracy achieved during cross-validation: %f' % best_val)
+```
+
+Plotting the results of cross-validation, Figure 7, we obtain a validation accuracy of 52.0%, acquired with the following parameters. 
+    - Learning Rate: 1e-3
+    - Regularization Strength: 0.3 
+    - Hidden Layer Size: 150 
+
+![png](/assets/png/2lnn/output_24_1.png){:width="560px"}
 {: style="text-align: center;"} 
 
-__Figure 6:__ _..._
+__Figure 7:__ _Training Results (After HyperParameter Tuning): Loss, Training Accuracy, & Validation Accuracy_
 {: style="text-align: center;"} 
 
+However, it is worth noting how the validation and training accuracies begin to diverge after approximately 2 epochs. 
+Visualizing the weights of the learned parameters, Figure 8, we can start to see some details emerge in the output. 
 
-![png](/assets/png/2lnn/output_26_0.png){:width="560px"}
+![png](/assets/png/2lnn/output_25_0.png){:width="560px"}
 {: style="text-align: center;"} 
 
-__Figure 7:__ _..._
+__Figure 8:__ _Visualization of Learned Parameters_
 {: style="text-align: center;"} 
 
+Finally, testing the model on the test data set, we obtain a Test Accuracy of 52%.
+
+```python
+test_acc = (best_net.predict(X_test) == y_test).mean()
+print('Test accuracy: ', test_acc)
+
+Test accuracy:  0.52
+```
 
 
 

@@ -25,6 +25,10 @@ def rel_error(x, y):
     return np.max(np.abs(x - y) / (np.maximum(1e-8, np.abs(x) + np.abs(y))))
 ```
 
+    The autoreload extension is already loaded. To reload it, use:
+      %reload_ext autoreload
+    
+
 We will use the class `TwoLayerNet` in the file `cs231n/classifiers/neural_net.py` to represent instances of our network. The network parameters are stored in the instance variable `self.params` where keys are string parameter names and values are numpy arrays. Below, we initialize toy data and a toy model that we will use to develop your implementation.
 
 
@@ -202,7 +206,7 @@ def get_CIFAR10_data(num_training=49000, num_validation=1000, num_test=1000):
     we used for the SVM, but condensed to a single function.  
     """
     # Load the raw CIFAR-10 data
-    cifar10_dir = 'cs231n/datasets/cifar-10-batches-py'
+    cifar10_dir = 'datasets/cifar-10-batches-py'
     
     # Cleaning up variables to prevent loading data multiple times (which may cause memory issue)
     try:
@@ -323,20 +327,24 @@ Another strategy is to visualize the weights that were learned in the first laye
 
 ```python
 # Plot the loss function and train / validation accuracies
-plt.subplot(2, 1, 1)
-plt.plot(stats['loss_history'])
-plt.title('Loss history')
-plt.xlabel('Iteration')
-plt.ylabel('Loss')
+def plot_stats(stats):
+    plt.subplot(2, 1, 1)
+    plt.plot(stats['loss_history'])
+    plt.title('Loss history')
+    plt.xlabel('Iteration')
+    plt.ylabel('Loss')
 
-plt.subplot(2, 1, 2)
-plt.plot(stats['train_acc_history'], label='train')
-plt.plot(stats['val_acc_history'], label='val')
-plt.title('Classification accuracy history')
-plt.xlabel('Epoch')
-plt.ylabel('Classification accuracy')
-plt.legend()
-plt.show()
+    plt.subplot(2, 1, 2)
+    plt.plot(stats['train_acc_history'], label='train')
+    plt.plot(stats['val_acc_history'], label='val')
+    plt.title('Classification accuracy history')
+    plt.xlabel('Epoch')
+    plt.ylabel('Classification accuracy')
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+plot_stats(stats)
 ```
 
 
@@ -391,470 +399,61 @@ $\color{blue}{\textit Your Answer:}$
 ```python
 best_net = None # store the best model into this 
 
-#################################################################################
-# TODO: Tune hyperparameters using the validation set. Store your best trained  #
-# model in best_net.                                                            #
-#                                                                               #
-# To help debug your network, it may help to use visualizations similar to the  #
-# ones we used above; these visualizations will have significant qualitative    #
-# differences from the ones we saw above for the poorly tuned network.          #
-#                                                                               #
-# Tweaking hyperparameters by hand can be fun, but you might find it useful to  #
-# write code to sweep through possible combinations of hyperparameters          #
-# automatically like we did on the previous exercises.                          #
-#################################################################################
-# *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
 best_val = -1
 best_stats = None
-h = [100, 150, 200, 250]
-learning_rates = [1e-3, 1e-4, 1e-5]
-regularization_strengths = [0.3, 0.4, 0.5]
+h = [150]
+learning_rates = [1e-3]
+regularization_strengths = [0.3]
 results = {}
-iters = 1000
+iters = 3000
 for hidden_size in h:
     for lr in learning_rates:
         for rs in regularization_strengths:
-            print("Processing H: %s ::: Learning Rate: %s ::: Reg Strength: %s" % (hidden_size, lr, rs))
             net = TwoLayerNet(input_size, hidden_size, num_classes)
 
             # Train the network
             stats = net.train(X_train, y_train, X_val, y_val,
                         num_iters=iters, batch_size=200,
                         learning_rate=lr, learning_rate_decay=0.95,
-                        reg=rs, verbose=True)
+                        reg=rs, verbose=False)
 
-            y_train_pred = net.predict(X_train)
-            acc_train = np.mean(y_train == y_train_pred)
-            y_val_pred = net.predict(X_val)
-            acc_val = np.mean(y_val == y_val_pred)
+            # Make predictions against training set
+            train_pred = net.predict(X_train)
+            # Get average training prediction accuracy
+            train_acc = np.mean(y_train == y_train_pred)
+            # Make predictions against validation set
+            val_pred = net.predict(X_val)
+            # Get average validation prediction accuracy
+            val_acc = np.mean(y_val == val_pred)
 
-            results[(hidden_size, lr, rs)] = (acc_train, acc_val)
+            # Store results in dictionary using hyperparameters as key values
+            results[(hidden_size, lr, rs)] = (hidden_size, train_acc, val_acc)
 
-            if best_val < acc_val:
+            # Update best validation accuracy if better results are obtained
+            if val_acc > best_val:
                 best_stats = stats
-                best_val = acc_val
+                best_val = val_acc
                 best_net = net
 
-```
-
-    Processing H: 100 ::: Learning Rate: 0.001 ::: Reg Strength: 0.3
-    iteration 0 / 1000: loss 2.303496
-    iteration 100 / 1000: loss 1.934023
-    iteration 200 / 1000: loss 1.724827
-    iteration 300 / 1000: loss 1.633215
-    iteration 400 / 1000: loss 1.658637
-    iteration 500 / 1000: loss 1.678121
-    iteration 600 / 1000: loss 1.494559
-    iteration 700 / 1000: loss 1.566209
-    iteration 800 / 1000: loss 1.470060
-    iteration 900 / 1000: loss 1.614719
-    Processing H: 100 ::: Learning Rate: 0.001 ::: Reg Strength: 0.4
-    iteration 0 / 1000: loss 2.303804
-    iteration 100 / 1000: loss 1.937946
-    iteration 200 / 1000: loss 1.734066
-    iteration 300 / 1000: loss 1.646694
-    iteration 400 / 1000: loss 1.671811
-    iteration 500 / 1000: loss 1.688113
-    iteration 600 / 1000: loss 1.514092
-    iteration 700 / 1000: loss 1.588273
-    iteration 800 / 1000: loss 1.486926
-    iteration 900 / 1000: loss 1.632204
-    Processing H: 100 ::: Learning Rate: 0.001 ::: Reg Strength: 0.5
-    iteration 0 / 1000: loss 2.304112
-    iteration 100 / 1000: loss 1.941509
-    iteration 200 / 1000: loss 1.740702
-    iteration 300 / 1000: loss 1.657684
-    iteration 400 / 1000: loss 1.683584
-    iteration 500 / 1000: loss 1.706019
-    iteration 600 / 1000: loss 1.532358
-    iteration 700 / 1000: loss 1.613551
-    iteration 800 / 1000: loss 1.505119
-    iteration 900 / 1000: loss 1.655387
-    Processing H: 100 ::: Learning Rate: 0.0001 ::: Reg Strength: 0.3
-    iteration 0 / 1000: loss 2.303496
-    iteration 100 / 1000: loss 2.302578
-    iteration 200 / 1000: loss 2.293809
-    iteration 300 / 1000: loss 2.240220
-    iteration 400 / 1000: loss 2.194275
-    iteration 500 / 1000: loss 2.141821
-    iteration 600 / 1000: loss 2.076900
-    iteration 700 / 1000: loss 2.095224
-    iteration 800 / 1000: loss 1.957757
-    iteration 900 / 1000: loss 1.997002
-    Processing H: 100 ::: Learning Rate: 0.0001 ::: Reg Strength: 0.4
-    iteration 0 / 1000: loss 2.303804
-    iteration 100 / 1000: loss 2.302882
-    iteration 200 / 1000: loss 2.294183
-    iteration 300 / 1000: loss 2.240999
-    iteration 400 / 1000: loss 2.195382
-    iteration 500 / 1000: loss 2.143304
-    iteration 600 / 1000: loss 2.078640
-    iteration 700 / 1000: loss 2.097250
-    iteration 800 / 1000: loss 1.960251
-    iteration 900 / 1000: loss 2.000153
-    Processing H: 100 ::: Learning Rate: 0.0001 ::: Reg Strength: 0.5
-    iteration 0 / 1000: loss 2.304112
-    iteration 100 / 1000: loss 2.303183
-    iteration 200 / 1000: loss 2.294552
-    iteration 300 / 1000: loss 2.241769
-    iteration 400 / 1000: loss 2.196474
-    iteration 500 / 1000: loss 2.144774
-    iteration 600 / 1000: loss 2.080330
-    iteration 700 / 1000: loss 2.099245
-    iteration 800 / 1000: loss 1.962711
-    iteration 900 / 1000: loss 2.003229
-    Processing H: 100 ::: Learning Rate: 1e-05 ::: Reg Strength: 0.3
-    iteration 0 / 1000: loss 2.303496
-    iteration 100 / 1000: loss 2.303451
-    iteration 200 / 1000: loss 2.303409
-    iteration 300 / 1000: loss 2.303364
-    iteration 400 / 1000: loss 2.303343
-    iteration 500 / 1000: loss 2.303288
-    iteration 600 / 1000: loss 2.303191
-    iteration 700 / 1000: loss 2.303214
-    iteration 800 / 1000: loss 2.302990
-    iteration 900 / 1000: loss 2.302996
-    Processing H: 100 ::: Learning Rate: 1e-05 ::: Reg Strength: 0.4
-    iteration 0 / 1000: loss 2.303804
-    iteration 100 / 1000: loss 2.303757
-    iteration 200 / 1000: loss 2.303715
-    iteration 300 / 1000: loss 2.303670
-    iteration 400 / 1000: loss 2.303647
-    iteration 500 / 1000: loss 2.303592
-    iteration 600 / 1000: loss 2.303495
-    iteration 700 / 1000: loss 2.303517
-    iteration 800 / 1000: loss 2.303293
-    iteration 900 / 1000: loss 2.303299
-    Processing H: 100 ::: Learning Rate: 1e-05 ::: Reg Strength: 0.5
-    iteration 0 / 1000: loss 2.304112
-    iteration 100 / 1000: loss 2.304064
-    iteration 200 / 1000: loss 2.304020
-    iteration 300 / 1000: loss 2.303974
-    iteration 400 / 1000: loss 2.303951
-    iteration 500 / 1000: loss 2.303895
-    iteration 600 / 1000: loss 2.303798
-    iteration 700 / 1000: loss 2.303819
-    iteration 800 / 1000: loss 2.303595
-    iteration 900 / 1000: loss 2.303601
-    Processing H: 150 ::: Learning Rate: 0.001 ::: Reg Strength: 0.3
-    iteration 0 / 1000: loss 2.304006
-    iteration 100 / 1000: loss 1.874272
-    iteration 200 / 1000: loss 1.741396
-    iteration 300 / 1000: loss 1.679444
-    iteration 400 / 1000: loss 1.592295
-    iteration 500 / 1000: loss 1.630126
-    iteration 600 / 1000: loss 1.657525
-    iteration 700 / 1000: loss 1.564650
-    iteration 800 / 1000: loss 1.533646
-    iteration 900 / 1000: loss 1.496230
-    Processing H: 150 ::: Learning Rate: 0.001 ::: Reg Strength: 0.4
-    iteration 0 / 1000: loss 2.304467
-    iteration 100 / 1000: loss 1.878552
-    iteration 200 / 1000: loss 1.749327
-    iteration 300 / 1000: loss 1.685700
-    iteration 400 / 1000: loss 1.607196
-    iteration 500 / 1000: loss 1.646800
-    iteration 600 / 1000: loss 1.678160
-    iteration 700 / 1000: loss 1.589396
-    iteration 800 / 1000: loss 1.559482
-    iteration 900 / 1000: loss 1.525471
-    Processing H: 150 ::: Learning Rate: 0.001 ::: Reg Strength: 0.5
-    iteration 0 / 1000: loss 2.304928
-    iteration 100 / 1000: loss 1.882243
-    iteration 200 / 1000: loss 1.756697
-    iteration 300 / 1000: loss 1.695455
-    iteration 400 / 1000: loss 1.616714
-    iteration 500 / 1000: loss 1.664345
-    iteration 600 / 1000: loss 1.699235
-    iteration 700 / 1000: loss 1.606009
-    iteration 800 / 1000: loss 1.573412
-    iteration 900 / 1000: loss 1.541338
-    Processing H: 150 ::: Learning Rate: 0.0001 ::: Reg Strength: 0.3
-    iteration 0 / 1000: loss 2.304006
-    iteration 100 / 1000: loss 2.302461
-    iteration 200 / 1000: loss 2.285757
-    iteration 300 / 1000: loss 2.205187
-    iteration 400 / 1000: loss 2.159101
-    iteration 500 / 1000: loss 2.148959
-    iteration 600 / 1000: loss 2.067656
-    iteration 700 / 1000: loss 2.022951
-    iteration 800 / 1000: loss 1.962501
-    iteration 900 / 1000: loss 1.929666
-    Processing H: 150 ::: Learning Rate: 0.0001 ::: Reg Strength: 0.4
-    iteration 0 / 1000: loss 2.304467
-    iteration 100 / 1000: loss 2.302918
-    iteration 200 / 1000: loss 2.286339
-    iteration 300 / 1000: loss 2.206267
-    iteration 400 / 1000: loss 2.160506
-    iteration 500 / 1000: loss 2.150289
-    iteration 600 / 1000: loss 2.069575
-    iteration 700 / 1000: loss 2.025490
-    iteration 800 / 1000: loss 1.965476
-    iteration 900 / 1000: loss 1.932975
-    Processing H: 150 ::: Learning Rate: 0.0001 ::: Reg Strength: 0.5
-    iteration 0 / 1000: loss 2.304928
-    iteration 100 / 1000: loss 2.303371
-    iteration 200 / 1000: loss 2.286913
-    iteration 300 / 1000: loss 2.207335
-    iteration 400 / 1000: loss 2.161898
-    iteration 500 / 1000: loss 2.151611
-    iteration 600 / 1000: loss 2.071493
-    iteration 700 / 1000: loss 2.028024
-    iteration 800 / 1000: loss 1.968436
-    iteration 900 / 1000: loss 1.936315
-    Processing H: 150 ::: Learning Rate: 1e-05 ::: Reg Strength: 0.3
-    iteration 0 / 1000: loss 2.304006
-    iteration 100 / 1000: loss 2.303910
-    iteration 200 / 1000: loss 2.303794
-    iteration 300 / 1000: loss 2.303709
-    iteration 400 / 1000: loss 2.303638
-    iteration 500 / 1000: loss 2.303646
-    iteration 600 / 1000: loss 2.303545
-    iteration 700 / 1000: loss 2.303377
-    iteration 800 / 1000: loss 2.303087
-    iteration 900 / 1000: loss 2.302589
-    Processing H: 150 ::: Learning Rate: 1e-05 ::: Reg Strength: 0.4
-    iteration 0 / 1000: loss 2.304467
-    iteration 100 / 1000: loss 2.304370
-    iteration 200 / 1000: loss 2.304253
-    iteration 300 / 1000: loss 2.304167
-    iteration 400 / 1000: loss 2.304095
-    iteration 500 / 1000: loss 2.304102
-    iteration 600 / 1000: loss 2.304000
-    iteration 700 / 1000: loss 2.303832
-    iteration 800 / 1000: loss 2.303543
-    iteration 900 / 1000: loss 2.303046
-    Processing H: 150 ::: Learning Rate: 1e-05 ::: Reg Strength: 0.5
-    iteration 0 / 1000: loss 2.304928
-    iteration 100 / 1000: loss 2.304829
-    iteration 200 / 1000: loss 2.304711
-    iteration 300 / 1000: loss 2.304624
-    iteration 400 / 1000: loss 2.304551
-    iteration 500 / 1000: loss 2.304556
-    iteration 600 / 1000: loss 2.304454
-    iteration 700 / 1000: loss 2.304285
-    iteration 800 / 1000: loss 2.303995
-    iteration 900 / 1000: loss 2.303499
-    Processing H: 200 ::: Learning Rate: 0.001 ::: Reg Strength: 0.3
-    iteration 0 / 1000: loss 2.304445
-    iteration 100 / 1000: loss 1.849661
-    iteration 200 / 1000: loss 1.745126
-    iteration 300 / 1000: loss 1.816652
-    iteration 400 / 1000: loss 1.673047
-    iteration 500 / 1000: loss 1.542567
-    iteration 600 / 1000: loss 1.585752
-    iteration 700 / 1000: loss 1.588187
-    iteration 800 / 1000: loss 1.463372
-    iteration 900 / 1000: loss 1.614004
-    Processing H: 200 ::: Learning Rate: 0.001 ::: Reg Strength: 0.4
-    iteration 0 / 1000: loss 2.305060
-    iteration 100 / 1000: loss 1.854159
-    iteration 200 / 1000: loss 1.752807
-    iteration 300 / 1000: loss 1.828637
-    iteration 400 / 1000: loss 1.688073
-    iteration 500 / 1000: loss 1.565137
-    iteration 600 / 1000: loss 1.610989
-    iteration 700 / 1000: loss 1.607205
-    iteration 800 / 1000: loss 1.488921
-    iteration 900 / 1000: loss 1.634788
-    Processing H: 200 ::: Learning Rate: 0.001 ::: Reg Strength: 0.5
-    iteration 0 / 1000: loss 2.305676
-    iteration 100 / 1000: loss 1.857541
-    iteration 200 / 1000: loss 1.760619
-    iteration 300 / 1000: loss 1.838576
-    iteration 400 / 1000: loss 1.696546
-    iteration 500 / 1000: loss 1.580356
-    iteration 600 / 1000: loss 1.627308
-    iteration 700 / 1000: loss 1.627342
-    iteration 800 / 1000: loss 1.504788
-    iteration 900 / 1000: loss 1.661733
-    Processing H: 200 ::: Learning Rate: 0.0001 ::: Reg Strength: 0.3
-    iteration 0 / 1000: loss 2.304445
-    iteration 100 / 1000: loss 2.302720
-    iteration 200 / 1000: loss 2.287593
-    iteration 300 / 1000: loss 2.243041
-    iteration 400 / 1000: loss 2.187324
-    iteration 500 / 1000: loss 2.051106
-    iteration 600 / 1000: loss 2.088828
-    iteration 700 / 1000: loss 2.039649
-    iteration 800 / 1000: loss 1.880027
-    iteration 900 / 1000: loss 2.021152
-    Processing H: 200 ::: Learning Rate: 0.0001 ::: Reg Strength: 0.4
-    iteration 0 / 1000: loss 2.305060
-    iteration 100 / 1000: loss 2.303328
-    iteration 200 / 1000: loss 2.288316
-    iteration 300 / 1000: loss 2.244057
-    iteration 400 / 1000: loss 2.188879
-    iteration 500 / 1000: loss 2.053080
-    iteration 600 / 1000: loss 2.091002
-    iteration 700 / 1000: loss 2.042297
-    iteration 800 / 1000: loss 1.883521
-    iteration 900 / 1000: loss 2.024723
-    Processing H: 200 ::: Learning Rate: 0.0001 ::: Reg Strength: 0.5
-    iteration 0 / 1000: loss 2.305676
-    iteration 100 / 1000: loss 2.303932
-    iteration 200 / 1000: loss 2.289030
-    iteration 300 / 1000: loss 2.245058
-    iteration 400 / 1000: loss 2.190406
-    iteration 500 / 1000: loss 2.055041
-    iteration 600 / 1000: loss 2.093133
-    iteration 700 / 1000: loss 2.044913
-    iteration 800 / 1000: loss 1.886935
-    iteration 900 / 1000: loss 2.028241
-    Processing H: 200 ::: Learning Rate: 1e-05 ::: Reg Strength: 0.3
-    iteration 0 / 1000: loss 2.304445
-    iteration 100 / 1000: loss 2.304378
-    iteration 200 / 1000: loss 2.304266
-    iteration 300 / 1000: loss 2.304223
-    iteration 400 / 1000: loss 2.304078
-    iteration 500 / 1000: loss 2.303868
-    iteration 600 / 1000: loss 2.303887
-    iteration 700 / 1000: loss 2.303653
-    iteration 800 / 1000: loss 2.303228
-    iteration 900 / 1000: loss 2.303659
-    Processing H: 200 ::: Learning Rate: 1e-05 ::: Reg Strength: 0.4
-    iteration 0 / 1000: loss 2.305060
-    iteration 100 / 1000: loss 2.304992
-    iteration 200 / 1000: loss 2.304878
-    iteration 300 / 1000: loss 2.304834
-    iteration 400 / 1000: loss 2.304688
-    iteration 500 / 1000: loss 2.304477
-    iteration 600 / 1000: loss 2.304495
-    iteration 700 / 1000: loss 2.304261
-    iteration 800 / 1000: loss 2.303836
-    iteration 900 / 1000: loss 2.304265
-    Processing H: 200 ::: Learning Rate: 1e-05 ::: Reg Strength: 0.5
-    iteration 0 / 1000: loss 2.305676
-    iteration 100 / 1000: loss 2.305606
-    iteration 200 / 1000: loss 2.305490
-    iteration 300 / 1000: loss 2.305444
-    iteration 400 / 1000: loss 2.305296
-    iteration 500 / 1000: loss 2.305084
-    iteration 600 / 1000: loss 2.305100
-    iteration 700 / 1000: loss 2.304865
-    iteration 800 / 1000: loss 2.304440
-    iteration 900 / 1000: loss 2.304867
-    Processing H: 250 ::: Learning Rate: 0.001 ::: Reg Strength: 0.3
-    iteration 0 / 1000: loss 2.304864
-    iteration 100 / 1000: loss 1.858971
-    iteration 200 / 1000: loss 1.777485
-    iteration 300 / 1000: loss 1.589951
-    iteration 400 / 1000: loss 1.588001
-    iteration 500 / 1000: loss 1.695929
-    iteration 600 / 1000: loss 1.544592
-    iteration 700 / 1000: loss 1.728002
-    iteration 800 / 1000: loss 1.445239
-    iteration 900 / 1000: loss 1.615519
-    Processing H: 250 ::: Learning Rate: 0.001 ::: Reg Strength: 0.4
-    iteration 0 / 1000: loss 2.305633
-    iteration 100 / 1000: loss 1.863586
-    iteration 200 / 1000: loss 1.786149
-    iteration 300 / 1000: loss 1.601071
-    iteration 400 / 1000: loss 1.604213
-    iteration 500 / 1000: loss 1.716027
-    iteration 600 / 1000: loss 1.564976
-    iteration 700 / 1000: loss 1.755343
-    iteration 800 / 1000: loss 1.477814
-    iteration 900 / 1000: loss 1.646744
-    Processing H: 250 ::: Learning Rate: 0.001 ::: Reg Strength: 0.5
-    iteration 0 / 1000: loss 2.306403
-    iteration 100 / 1000: loss 1.867921
-    iteration 200 / 1000: loss 1.792730
-    iteration 300 / 1000: loss 1.611522
-    iteration 400 / 1000: loss 1.616517
-    iteration 500 / 1000: loss 1.731545
-    iteration 600 / 1000: loss 1.586761
-    iteration 700 / 1000: loss 1.775152
-    iteration 800 / 1000: loss 1.497442
-    iteration 900 / 1000: loss 1.665479
-    Processing H: 250 ::: Learning Rate: 0.0001 ::: Reg Strength: 0.3
-    iteration 0 / 1000: loss 2.304864
-    iteration 100 / 1000: loss 2.302451
-    iteration 200 / 1000: loss 2.280927
-    iteration 300 / 1000: loss 2.182983
-    iteration 400 / 1000: loss 2.083850
-    iteration 500 / 1000: loss 2.103006
-    iteration 600 / 1000: loss 2.040473
-    iteration 700 / 1000: loss 2.043466
-    iteration 800 / 1000: loss 1.914979
-    iteration 900 / 1000: loss 2.000358
-    Processing H: 250 ::: Learning Rate: 0.0001 ::: Reg Strength: 0.4
-    iteration 0 / 1000: loss 2.305633
-    iteration 100 / 1000: loss 2.303212
-    iteration 200 / 1000: loss 2.281848
-    iteration 300 / 1000: loss 2.184428
-    iteration 400 / 1000: loss 2.085851
-    iteration 500 / 1000: loss 2.105009
-    iteration 600 / 1000: loss 2.042838
-    iteration 700 / 1000: loss 2.045863
-    iteration 800 / 1000: loss 1.918363
-    iteration 900 / 1000: loss 2.003571
-    Processing H: 250 ::: Learning Rate: 0.0001 ::: Reg Strength: 0.5
-    iteration 0 / 1000: loss 2.306403
-    iteration 100 / 1000: loss 2.303968
-    iteration 200 / 1000: loss 2.282756
-    iteration 300 / 1000: loss 2.185855
-    iteration 400 / 1000: loss 2.087840
-    iteration 500 / 1000: loss 2.106972
-    iteration 600 / 1000: loss 2.045161
-    iteration 700 / 1000: loss 2.048226
-    iteration 800 / 1000: loss 1.921714
-    iteration 900 / 1000: loss 2.006704
-    Processing H: 250 ::: Learning Rate: 1e-05 ::: Reg Strength: 0.3
-    iteration 0 / 1000: loss 2.304864
-    iteration 100 / 1000: loss 2.304781
-    iteration 200 / 1000: loss 2.304631
-    iteration 300 / 1000: loss 2.304474
-    iteration 400 / 1000: loss 2.304243
-    iteration 500 / 1000: loss 2.304336
-    iteration 600 / 1000: loss 2.303998
-    iteration 700 / 1000: loss 2.303742
-    iteration 800 / 1000: loss 2.303312
-    iteration 900 / 1000: loss 2.303130
-    Processing H: 250 ::: Learning Rate: 1e-05 ::: Reg Strength: 0.4
-    iteration 0 / 1000: loss 2.305633
-    iteration 100 / 1000: loss 2.305548
-    iteration 200 / 1000: loss 2.305397
-    iteration 300 / 1000: loss 2.305238
-    iteration 400 / 1000: loss 2.305006
-    iteration 500 / 1000: loss 2.305097
-    iteration 600 / 1000: loss 2.304759
-    iteration 700 / 1000: loss 2.304502
-    iteration 800 / 1000: loss 2.304072
-    iteration 900 / 1000: loss 2.303890
-    Processing H: 250 ::: Learning Rate: 1e-05 ::: Reg Strength: 0.5
-    iteration 0 / 1000: loss 2.306403
-    iteration 100 / 1000: loss 2.306316
-    iteration 200 / 1000: loss 2.306161
-    iteration 300 / 1000: loss 2.306001
-    iteration 400 / 1000: loss 2.305767
-    iteration 500 / 1000: loss 2.305856
-    iteration 600 / 1000: loss 2.305516
-    iteration 700 / 1000: loss 2.305258
-    iteration 800 / 1000: loss 2.304828
-    iteration 900 / 1000: loss 2.304646
-    
-
-
-```python
 # Print out results.
 for h, lr, reg in sorted(results):
-    train_accuracy, val_accuracy = results[(h, lr, reg)]
+    hidden_size, train_accuracy, val_accuracy = results[(h, lr, reg)]
     print('h %s lr %e reg %e train accuracy: %f val accuracy: %f' % (
                 h, lr, reg, train_accuracy, val_accuracy))
 
 print('best validation accuracy achieved during cross-validation: %f' % best_val)
-
+plot_stats(best_stats)
 # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+
 ```
 
-    h 130 lr 1.000000e-03 reg 5.000000e-01 train accuracy: 0.487510 val accuracy: 0.455000
-    h 140 lr 1.000000e-03 reg 5.000000e-01 train accuracy: 0.490837 val accuracy: 0.481000
-    h 150 lr 1.000000e-03 reg 5.000000e-01 train accuracy: 0.498694 val accuracy: 0.485000
-    h 160 lr 1.000000e-03 reg 5.000000e-01 train accuracy: 0.494449 val accuracy: 0.470000
-    best validation accuracy achieved during cross-validation: 0.485000
+    h 150 lr 1.000000e-03 reg 3.000000e-01 train accuracy: 0.229408 val accuracy: 0.520000
+    best validation accuracy achieved during cross-validation: 0.520000
     
+
+
+![png](output_24_1.png)
+
 
 
 ```python
@@ -863,7 +462,7 @@ show_net_weights(best_net)
 ```
 
 
-![png](output_26_0.png)
+![png](output_25_0.png)
 
 
 # Run on the test set
@@ -875,7 +474,7 @@ test_acc = (best_net.predict(X_test) == y_test).mean()
 print('Test accuracy: ', test_acc)
 ```
 
-    Test accuracy:  0.486
+    Test accuracy:  0.52
     
 
 **Inline Question**
