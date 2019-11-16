@@ -7,6 +7,9 @@ comments: true
 math: true
 author: "J. Abbott"
 ---
+
+> Original source code provided by Stanford University, see [course notes](http://cs231n.github.io/) for cs231n: Convolutional Neural Networks for Visual Recognition.
+
 ```python
 # -*- coding: utf-8 -*-
 """

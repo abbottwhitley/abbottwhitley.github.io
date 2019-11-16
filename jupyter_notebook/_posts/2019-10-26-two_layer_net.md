@@ -1,3 +1,15 @@
+---
+layout: post
+title: "Two Layer Neural Network"
+date: 2019-10-26
+category: Jupyter Notebooks
+comments: true
+math: true
+author: "J. Abbott"
+---
+
+> Original source code provided by Stanford University, see [course notes](http://cs231n.github.io/) for cs231n: Convolutional Neural Networks for Visual Recognition.
+
 # Implementing a Neural Network
 In this exercise we will develop a neural network with fully-connected layers to perform classification, and test it out on the CIFAR-10 dataset.
 
@@ -189,7 +201,7 @@ plt.show()
     
 
 
-![png](output_13_1.png)
+![png](/assets/png/2lnn/output_13_1.png)
 
 
 # Load the data
@@ -270,7 +282,7 @@ print('Test labels shape: ', y_test.shape)
 ```
 
 
-![png](output_15_0.png)
+![png](/assets/png/2lnn/output_15_0.png)
 
 
     Train data shape:  (49000, 3072)
@@ -348,7 +360,7 @@ plot_stats(stats)
 ```
 
 
-![png](output_19_0.png)
+![png](/assets/png/2lnn/output_19_0.png)
 
 
 
@@ -378,7 +390,7 @@ show_net_weights(net)
 ```
 
 
-![png](output_21_0.png)
+![png](/assets/png/2lnn/output_21_0.png)
 
 
 # Tune your hyperparameters
@@ -452,7 +464,7 @@ plot_stats(best_stats)
     
 
 
-![png](output_24_1.png)
+![png](/assets/png/2lnn/output_24_1.png)
 
 
 
@@ -462,7 +474,7 @@ show_net_weights(best_net)
 ```
 
 
-![png](output_25_0.png)
+![png](/assets/png/2lnn/output_25_0.png)
 
 
 # Run on the test set

@@ -8,9 +8,9 @@ math: true
 author: "J. Abbott"
 ---
 
-> Self Guided study of the [course notes](http://cs231n.github.io/)[^1] for cs231n: Convolutional Neural Networks for Visual Recognition provided through Stanford University. Included in this page are references to the classes and function calls developed by Stanford university and others, [Miranda[^2], Voss[^3]], who have worked through this course material. The complete implementation of the [Two-Layer Neural Network](/jupyter_notebook/jupyter%20notebooks/2019/09/26/svm_implementation.html) has been exported as a final Markdown file and can be found in the [Jupyter Notebooks](/jupyter_notebooks/) section of this site.
+> Self Guided study of the [course notes](http://cs231n.github.io/)[^1] for cs231n: Convolutional Neural Networks for Visual Recognition provided through Stanford University. Included in this page are references to the classes and function calls developed by Stanford university and others, [Miranda[^2], Voss[^3]], who have worked through this course material. The complete implementation of the [Two-Layer Neural Network](/jupyter_notebook/jupyter%20notebooks/2019/10/26/two_layer_net.html) has been exported as a final Markdown file and can be found in the [Jupyter Notebooks](/jupyter_notebooks/) section of this site.
 
-In this section, we'll work through the steps and underlying theory for developing a Two Layer Neural Network. The initial model will be generated and tested using a toy data set. Once we're able to obtain ideal testing and validation results using the toy dataset, we'll extend the application of the Two Layer Neural Network onto the CIFAR-10[^4] [^5] labeled dataset for image classification. 
+In this post, we'll work through the steps and theory for developing a Two Layer Neural Network. The initial model will be generated and tested using a toy data set. Once we're able to obtain ideal testing and validation results using the toy dataset, we'll extend the application of the Two Layer Neural Network onto the CIFAR-10[^4] [^5] labeled dataset for image classification. 
 
 - [Neural Network Architecture](#nn-architecture)
     - [Data Organization and Computation](#data_org)
@@ -30,15 +30,16 @@ In this section, we'll work through the steps and underlying theory for developi
 ## <a name="nn-architecture"></a> Neural Network Architecture
 
 ### <a name="data_org"></a> Data Organization and Computation
-In the previous section covering an [SVM classifier](/documentation/2019/09/26/Training-an-SVM-Classifier.html), we developed an image classification model using a linear score function which was computed using the dot product of the input training data set $$X$$ and the randomly generated weight matrix $$ W $$. In this example, $$X$$ was a set of $$n$$ images, (i.e. row vectors) containing 3072 pixels each plus an additional bias dimension for a final shape of $$(n$$ x $$ 3073)$$. The weight matrix $$W$$ in this example consisted of 10 column vectors of size 3072 randomly generated weights, (plus a bias $$b$$). The final matrix of shape $$(3072$$ x $$10)$$ represented each possible classification within the data set, providing us with a set of parameters $$W$$ that could then be learned through Stochastic Gradient Descent, (SGD).  
+In the previous post we developed an image classification model using a [SVM classifier](/documentation/2019/09/26/Training-an-SVM-Classifier.html), supervised learning algorithm that works to identify the optimal hyperplane for linearly separable patterns. The SVM uses a linear "scoring" function, $$f$$ which assumes a boundary exists that separates one class boundary from another. The scoring function $$f$$ was computed using the dot product of the input training data set $$X$$ and the randomly generated weight matrix $$W$$. In this example, $$X$$ was a set of $$n$$ images, (i.e. row vectors) containing 3072 pixels each plus an additional bias dimension $$b$$, for a final shape of $$(n$$ x $$ 3073)$$. The weight matrix $$W$$ in this example consisted of 10 column vectors of size 3072 randomly generated weights, (plus a bias $$b$$). The final matrix of shape $$(3073$$ x $$10)$$ represented each possible classification within the data set, providing us with a set of parameters $$W$$ that could then be learned through Stochastic Gradient Descent, (SGD).  
 
-For this implementation of a neural network, we'll utilize this same linear scoring function as a component within each layer of our network. The output from the first layer, also known as the hidden layer, will then be passed as an input into the second subsequent layer. As a general example, we might generate two weight matrices, $$W_1$$ of shape $$(3073 $$ x $$ 100)$$ and  $$W_2$$ of shape $$(10 $$ x $$ 100)$$, where the larger matrix $$W_1$$ will learn to identify larger features in the data set while the smaller weight matrix $$W_2$$ will learn to identify smaller, detail specific features. The final score is then computed as follows. 
+For this implementation of a neural network, we'll utilize the softmax scoring function as our linear classifier and extend the scoring process across two separate layers consisting of a hidden layer and final output layer. As a general example, we might generate two weight matrices, $$W_1$$ of shape $$(3073 $$ x $$ 100)$$ and  $$W_2$$ of shape $$(100 $$ x $$ 10)$$, where the larger matrix $$W_1$$ will learn to identify larger features in the data set while the smaller weight matrix $$W_2$$ will learn to identify smaller, detail specific features. The final score is then computed as follows. 
 
 $$
 s = W_2 * max(0, X * W_1)
 $$ 
 
-In this representation, the use of the $$max()$$ function serves as a ReLU activation function to the network, (discussed below). This application provides us with a non-linearity which separates the two weight matrices, allowing us to train each set of parameters through SGD. This implementation of a neural network effectively executes a series of linear mapping functions which are tied together through activation functions, (i.e. non-linear functions). A simple visualization of this network is shown in Figure 1.
+In the above expression, the $$max()$$ function, otherwise know as a ReLU activation function, works as a non-linearity which provides a separation between 
+the two weight matrices $$W_1$$ and $$W_2$$. This separation in turn is what allows us to train each set of parameters through SGD. This implementation of a neural network effectively executes a series of linear mapping functions which are then tied together through activation functions, (i.e. non-linear functions). A simple visualization of this network is shown in Figure 1.
 
 ![png](/assets/png/2lnn/2LNN.png){:width="560px"}
 {: style="text-align: center;"} 
@@ -46,7 +47,7 @@ In this representation, the use of the $$max()$$ function serves as a ReLU activ
 __Figure 1:__ _Graphical Representation of a Two Layer Neural Network_
 {: style="text-align: center;"} 
 
-Note that the "first layer" of an N-Layer neural network starts after the input layer. In our case, figure one consists of an input layer and a 2 layer neural network, where by the network consists of a hidden layer and an output layer. Also omitted from the graphic in figure one are details regarding the activation function which is calculated as part of the hidden layer.  
+Note that the "first layer" of an N-Layer neural network starts after the input layer. Figure 1 shows an input layer and a 2 layer neural network, comprised of a hidden layer and an output layer. Also omitted from the graphic in figure one are details regarding the activation function which is calculated as part of the hidden layer.  
 
 ## <a name="dev-toy"></a> Development (Toy Model)
 
@@ -337,7 +338,7 @@ Validation accuracy:  0.282
 
 ## <a name="Hyperparameter-tuning"></a> Hyperparameter Tuning
 
-As stated, we wish to optimize our network through hyper parameter tuning. By observation of Figure 6, the gap between the training accuracy and the validation accuracy remains low, which provides reassurance that we're not over fitting. However, we can better understand the affects of regularization strength on the model by fine tunning the regularization strength. Another hyperparameter to analyze is the learning rate. Large learning rates have the tendency to result in unstable training, causing the model to converge rapidly to a suboptimal solution. Small leaning rates on the other hand risk getting stuck and fail to train the network. Finally, we'll look at the total number of training iterations as well as how adjustments to the number of neurons in the hidden layer affect overall performance. Again, looking at Figure 6, the validation accuracy maintains an upward slope through training, suggesting that we simply haven't provided the network with enough iterations. 
+As stated, we wish to optimize our network through hyper parameter tuning. By observation of Figure 6, the gap between the training accuracy and the validation accuracy remains low, which provides reassurance that we're not over fitting. However, we can better understand the affects of regularization strength on the model by fine tunning the regularization strength. Another hyperparameter to analyze is the learning rate. Large learning rates have the tendency to result in unstable training, causing the model to converge rapidly to a suboptimal solution. Small leaning rates on the other hand risk getting stuck and fail to train the network. Finally, we'll look at the total number of training iterations as well as how adjustments to the number of neurons in the hidden layer affect overall performance. Again, looking at Figure 6, the validation accuracy maintains an upward slope through training, suggesting that we simply haven't provided the network with enough iterations. Referencing source code made available by Miranda[^2] and Voss[^3], the final implementation for hyperparameter tuning is shown below. 
 
 
 ![png](/assets/png/2lnn/output_19_0.png){:width="560px"}
@@ -345,7 +346,6 @@ As stated, we wish to optimize our network through hyper parameter tuning. By ob
 
 __Figure 6:__ _Training Results: Loss, Training Accuracy, & Validation Accuracy_
 {: style="text-align: center;"} 
-
 
 ```python
 best_net = None # store the best model into this 
@@ -395,19 +395,32 @@ for h, lr, reg in sorted(results):
 print('best validation accuracy achieved during cross-validation: %f' % best_val)
 ```
 
-Plotting the results of cross-validation, Figure 7, we obtain a validation accuracy of 52.0%, acquired with the following parameters. 
-    - Learning Rate: 1e-3
-    - Regularization Strength: 0.3 
-    - Hidden Layer Size: 150 
+```python
+h 100 lr 1.000000e-05 reg 3.000000e-01 train accuracy: 0.620776 val accuracy: 0.194000
+h 100 lr 1.000000e-05 reg 4.000000e-01 train accuracy: 0.620776 val accuracy: 0.194000
+h 100 lr 1.000000e-05 reg 5.000000e-01 train accuracy: 0.620776 val accuracy: 0.194000
+h 100 lr 1.000000e-04 reg 3.000000e-01 train accuracy: 0.620776 val accuracy: 0.391000
+h 100 lr 1.000000e-04 reg 4.000000e-01 train accuracy: 0.620776 val accuracy: 0.390000
+.
+.
+.
+best validation accuracy achieved during cross-validation: 0.52000
+```
+
+Looking at the output results, (python print statements above), we obtain a validation accuracy of 52.0% acquired using the following parameters. 
+- Learning Rate: 1e-3
+- Regularization Strength: 0.3 
+- Hidden Layer Size: 150 
+
+Plotting the training history for the net with the best validation accuracy, Figure 7, we're able to see the loss history, training accuracy, and validation accuracy as we train the network. It is worth noting how the validation and training accuracies begin to diverge after approximately 2 epochs, suggesting that we may be overfitting the data beyond this point. 
 
 ![png](/assets/png/2lnn/output_24_1.png){:width="560px"}
 {: style="text-align: center;"} 
 
 __Figure 7:__ _Training Results (After HyperParameter Tuning): Loss, Training Accuracy, & Validation Accuracy_
 {: style="text-align: center;"} 
-
-However, it is worth noting how the validation and training accuracies begin to diverge after approximately 2 epochs. 
-Visualizing the weights of the learned parameters, Figure 8, we can start to see some details emerge in the output. 
+ 
+Visualizing the weights of the learned parameters, Figure 8, we can start to see some details emerge in the learned weights. 
 
 ![png](/assets/png/2lnn/output_25_0.png){:width="560px"}
 {: style="text-align: center;"} 
@@ -415,7 +428,7 @@ Visualizing the weights of the learned parameters, Figure 8, we can start to see
 __Figure 8:__ _Visualization of Learned Parameters_
 {: style="text-align: center;"} 
 
-Finally, testing the model on the test data set, we obtain a Test Accuracy of 52%.
+Finally, we implement the model of learned weights using the test data set. From this step we we obtain a test accuracy of 52%.
 
 ```python
 test_acc = (best_net.predict(X_test) == y_test).mean()
